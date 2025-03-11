@@ -92,11 +92,14 @@ fun authenticationFields() {
                                 },
 
                             colors = TextFieldDefaults.outlinedTextFieldColors(
+                                unfocusedBorderColor = Color.LightGray,
+                                unfocusedLabelColor = Color.LightGray,
                                 focusedBorderColor = Color.White,
                                 focusedLabelColor = Color.White,
                                 cursorColor = Color.White,
                                 textColor = Color.White
-                            )
+                            ),
+                            shape = RoundedCornerShape(16.dp)
                         )
 
                         OutlinedTextField(
@@ -108,7 +111,7 @@ fun authenticationFields() {
                                 .focusRequester(focusRequesterSenha)
                                 .padding(top = 20.dp)
                                 .fillMaxWidth()
-                                .padding(bottom = 100.dp)
+                                .padding(bottom = 50.dp)
                                 .onKeyEvent { keyEvent ->
                                     if (keyEvent.key == Key.Enter) {
                                         focusRequesterLogin.requestFocus()
@@ -120,9 +123,12 @@ fun authenticationFields() {
                             colors = TextFieldDefaults.outlinedTextFieldColors(
                                 focusedBorderColor = Color.White,
                                 focusedLabelColor = Color.White,
+                                unfocusedLabelColor = Color.LightGray,
+                                unfocusedBorderColor = Color.LightGray,
                                 cursorColor = Color.White,
                                 textColor = Color.White
-                            )
+                            ),
+                            shape = RoundedCornerShape(16.dp)
                         )
 
                         Button(
@@ -163,7 +169,7 @@ fun ShowLogo() {
     AnimatedVisibility(true) {
         Column(
             Modifier
-                .padding(80.dp)
+                .padding(160.dp)
                 .width(350.dp),
             horizontalAlignment = Alignment.End) {
             Image(painterResource(Res.drawable.logo), null)
@@ -174,16 +180,15 @@ fun ShowLogo() {
 @Composable
 fun showUpLoginError() {
     if(falhaAutenticacao.collectAsState().value) {
-        var showDialog by remember { mutableStateOf(false) }
 
-        if (showDialog) {
+        if (falhaAutenticacao.collectAsState().value) {
             AlertDialog(
-                onDismissRequest = { showDialog = false },
+                onDismissRequest = { falhaAutenticacao.value = false },
                 title = { Text("Erro de Autenticação") },
                 text = { Text("Usuário ou senha estão incorretos.") },
                 confirmButton = {
                     TextButton(onClick = {
-                        showDialog = false
+                        falhaAutenticacao.value = false
                     }) {
                         Text("OK")
                     }
