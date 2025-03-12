@@ -15,7 +15,7 @@ object Theme {
 
     val transparentColor = Color(0x00000000)
     val  darkBlueColorTransparent = Color(0x340a1f44)
-    val  darkBlueColor = Color(0x990a1f44)
+    val  darkBlueColor = Color(0xbb0a1f44)
     val gradientBackground = Brush.verticalGradient(
         colors = listOf(
             Color(0xFF597395),

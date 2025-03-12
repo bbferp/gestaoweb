@@ -19,6 +19,8 @@ import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import gestaoweb.bbf.com.util.Theme.darkBlueColor
@@ -28,8 +30,11 @@ import gestaoweb.bbf.com.viewmodel.falhaAutenticacao
 import gestaoweb.bbf.com.viewmodel.usuarioLogado
 import gestaoweb.bbf.com.viewmodel.usuarioValidado
 import gestaoweb.bbf.com.viewmodel.validarUsuario
+import gestaoweb.composeapp.generated.resources.*
 import gestaoweb.composeapp.generated.resources.Res
 import gestaoweb.composeapp.generated.resources.logo
+import gestaoweb.composeapp.generated.resources.visibility
+import gestaoweb.composeapp.generated.resources.visibility_off
 import kotlinx.browser.window
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.collectLatest
@@ -45,103 +50,130 @@ import org.jetbrains.compose.resources.painterResource
 fun authenticationFields() {
     var usuario by remember { mutableStateOf("") }
     var senha by remember { mutableStateOf("") }
+    var isPasswordVisible by remember { mutableStateOf(false) }  // Estado para controlar a visibilidade da senha
 
     val focusRequesterUsuario = remember { FocusRequester() }
     val focusRequesterSenha = remember { FocusRequester() }
     val focusRequesterLogin = remember { FocusRequester() }
 
-    Row{
+    Row {
         ShowLogo()
 
-        Column(
-            Modifier
-                .fillMaxHeight()
+        Box(
+            modifier = Modifier.fillMaxSize()
         ) {
-            Box(
-                modifier = Modifier.fillMaxSize()
+            Card(
+                modifier = Modifier
+                    .align(Alignment.CenterEnd)
+                    .padding(end = 50.dp)
+                    .size(width = 400.dp, height = 420.dp),
+                shape = RoundedCornerShape(32.dp)
             ) {
-                Card(
+                Column(
                     modifier = Modifier
-                        .align(Alignment.CenterEnd)
-                        .padding(end = 50.dp)
-                        .size(width = 400.dp, height = 420.dp),
-                    shape = RoundedCornerShape(32.dp)
-
+                        .background(gradientBackground)
+                        .padding(16.dp),
+                    verticalArrangement = Arrangement.Center,
                 ) {
-                    Column(
-                        modifier = Modifier.background(gradientBackground)
-                            .padding(16.dp),
-                        verticalArrangement = Arrangement.Center,
-                    ) {
 
-                        OutlinedTextField(
-                            value = usuario,
-                            singleLine = true,
-                            onValueChange = { usuario = it },
-                            label = { Text("Usuário") },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .focusRequester(focusRequesterUsuario)
-                                .onKeyEvent { keyEvent ->
-                                    if (keyEvent.key == Key.Enter) {
-                                        focusRequesterSenha.requestFocus()
-                                        true
-                                    } else {
-                                        false
-                                    }
-                                },
-
-                            colors = TextFieldDefaults.outlinedTextFieldColors(
-                                unfocusedBorderColor = Color.LightGray,
-                                unfocusedLabelColor = Color.LightGray,
-                                focusedBorderColor = Color.White,
-                                focusedLabelColor = Color.White,
-                                cursorColor = Color.White,
-                                textColor = Color.White
-                            ),
-                            shape = RoundedCornerShape(16.dp)
-                        )
-
-                        OutlinedTextField(
-                            value = senha,
-                            singleLine = true,
-                            onValueChange = { senha = it },
-                            label = { Text("Senha") },
-                            modifier = Modifier
-                                .focusRequester(focusRequesterSenha)
-                                .padding(top = 20.dp)
-                                .fillMaxWidth()
-                                .padding(bottom = 50.dp)
-                                .onKeyEvent { keyEvent ->
-                                    if (keyEvent.key == Key.Enter) {
-                                        focusRequesterLogin.requestFocus()
-                                        true
-                                    } else {
-                                        false
-                                    }
-                                },
-                            colors = TextFieldDefaults.outlinedTextFieldColors(
-                                focusedBorderColor = Color.White,
-                                focusedLabelColor = Color.White,
-                                unfocusedLabelColor = Color.LightGray,
-                                unfocusedBorderColor = Color.LightGray,
-                                cursorColor = Color.White,
-                                textColor = Color.White
-                            ),
-                            shape = RoundedCornerShape(16.dp)
-                        )
-
-                        Button(
-                            onClick = {
-                                validarUsuario(usuario, senha)
+                    OutlinedTextField(
+                        value = usuario,
+                        singleLine = true,
+                        onValueChange = { usuario = it },
+                        label = { Text("Usuário") },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .focusRequester(focusRequesterUsuario)
+                            .onKeyEvent { keyEvent ->
+                                if (keyEvent.key == Key.Enter) {
+                                    focusRequesterSenha.requestFocus()
+                                    true
+                                } else {
+                                    false
+                                }
                             },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .focusRequester(focusRequesterLogin),
-                            colors = ButtonDefaults.buttonColors(backgroundColor = darkBlueColor)
-                        ) {
-                            Text(text = "Entrar", color = Color.White)
+                        leadingIcon = {
+                            Box(
+                                contentAlignment = Alignment.Center,
+                                modifier = Modifier
+                                    .background(Color.White, shape = RoundedCornerShape(25))
+                                    .padding(8.dp)
+                            ) {
+                                Icon(
+                                    painter = painterResource(Res.drawable.person),
+                                    contentDescription = "Usuário",
+                                    tint = darkBlueColor
+                                )
+                            }
+                        },
+                        colors = TextFieldDefaults.outlinedTextFieldColors(
+                            unfocusedBorderColor = Color.LightGray,
+                            unfocusedLabelColor = Color.LightGray,
+                            focusedBorderColor = Color.White,
+                            focusedLabelColor = Color.White,
+                            cursorColor = Color.White,
+                            textColor = Color.White
+                        ),
+                        shape = RoundedCornerShape(16.dp)
+                    )
+
+                    OutlinedTextField(
+                        value = senha,
+                        onValueChange = { senha = it },
+                        label = { Text("Senha") },
+                        singleLine = true,
+                        modifier = Modifier
+                            .focusRequester(focusRequesterSenha)
+                            .padding(top = 20.dp)
+                            .fillMaxWidth()
+                            .padding(bottom = 50.dp)
+                            .onKeyEvent { keyEvent ->
+                                if (keyEvent.key == Key.Enter) {
+                                    focusRequesterLogin.requestFocus()
+                                    true
+                                } else {
+                                    false
+                                }
+                            },
+                        leadingIcon = {
+                            Icon(
+                                painterResource(Res.drawable.lock),
+                                contentDescription = "Senha",
+                                tint = darkBlueColor
+                            )
+                        },
+                        colors = TextFieldDefaults.outlinedTextFieldColors(
+                            focusedBorderColor = Color.White,
+                            focusedLabelColor = Color.White,
+                            unfocusedLabelColor = Color.LightGray,
+                            unfocusedBorderColor = Color.LightGray,
+                            cursorColor = Color.White,
+                            textColor = Color.White
+                        ),
+                        shape = RoundedCornerShape(16.dp),
+                        visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+                        trailingIcon = {
+                            IconButton(onClick = { isPasswordVisible = !isPasswordVisible }) {
+                                val visibilityIcon = if (isPasswordVisible) Res.drawable.visibility else Res.drawable.visibility_off
+                                Icon(
+                                    painter = painterResource( visibilityIcon),
+                                    contentDescription = if (isPasswordVisible) "Ocultar senha" else "Mostrar senha",
+                                    tint = Color.White
+                                )
+                            }
                         }
+                    )
+
+                    Button(
+                        onClick = {
+                            validarUsuario(usuario, senha)
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .focusRequester(focusRequesterLogin),
+                        colors = ButtonDefaults.buttonColors(backgroundColor = darkBlueColor)
+                    ) {
+                        Text(text = "Entrar", color = Color.White)
                     }
                 }
             }
@@ -169,7 +201,7 @@ fun ShowLogo() {
     AnimatedVisibility(true) {
         Column(
             Modifier
-                .padding(160.dp)
+                .padding(100.dp)
                 .width(350.dp),
             horizontalAlignment = Alignment.End) {
             Image(painterResource(Res.drawable.logo), null)
@@ -190,9 +222,16 @@ fun showUpLoginError() {
                     TextButton(onClick = {
                         falhaAutenticacao.value = false
                     }) {
-                        Text("OK")
+                        Text(
+                       text =  "OK",
+                            style = TextStyle(
+                                color = Color.White
+                            )
+                        )
                     }
-                }
+                },
+                contentColor = Color.White,
+                backgroundColor = darkBlueColor,
             )
         }
     }
