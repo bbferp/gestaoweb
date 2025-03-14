@@ -25,10 +25,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import gestaoweb.bbf.com.util.Theme.darkBlueColor
 import gestaoweb.bbf.com.util.Theme.gradientBackground
-import gestaoweb.bbf.com.util.Theme.transparentColor
 import gestaoweb.bbf.com.viewmodel.falhaAutenticacao
 import gestaoweb.bbf.com.viewmodel.usuarioLogado
-import gestaoweb.bbf.com.viewmodel.usuarioValidado
 import gestaoweb.bbf.com.viewmodel.validarUsuario
 import gestaoweb.composeapp.generated.resources.*
 import gestaoweb.composeapp.generated.resources.Res
@@ -36,8 +34,6 @@ import gestaoweb.composeapp.generated.resources.logo
 import gestaoweb.composeapp.generated.resources.visibility
 import gestaoweb.composeapp.generated.resources.visibility_off
 import kotlinx.browser.window
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.collectLatest
 import org.jetbrains.compose.resources.painterResource
 
 @Composable
@@ -50,7 +46,7 @@ import org.jetbrains.compose.resources.painterResource
 fun authenticationFields() {
     var usuario by remember { mutableStateOf("") }
     var senha by remember { mutableStateOf("") }
-    var isPasswordVisible by remember { mutableStateOf(false) }  // Estado para controlar a visibilidade da senha
+    var isPasswordVisible by remember { mutableStateOf(false) }
 
     val focusRequesterUsuario = remember { FocusRequester() }
     val focusRequesterSenha = remember { FocusRequester() }
@@ -96,13 +92,12 @@ fun authenticationFields() {
                             Box(
                                 contentAlignment = Alignment.Center,
                                 modifier = Modifier
-                                    .background(Color.White, shape = RoundedCornerShape(25))
                                     .padding(8.dp)
                             ) {
                                 Icon(
                                     painter = painterResource(Res.drawable.person),
                                     contentDescription = "Usuário",
-                                    tint = darkBlueColor
+                                    tint = Color.White
                                 )
                             }
                         },
@@ -139,7 +134,7 @@ fun authenticationFields() {
                             Icon(
                                 painterResource(Res.drawable.lock),
                                 contentDescription = "Senha",
-                                tint = darkBlueColor
+                                tint = Color.White
                             )
                         },
                         colors = TextFieldDefaults.outlinedTextFieldColors(
