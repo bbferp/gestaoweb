@@ -206,29 +206,26 @@ fun ShowLogo() {
 
 @Composable
 fun showUpLoginError() {
-    if(falhaAutenticacao.collectAsState().value) {
-
-        if (falhaAutenticacao.collectAsState().value) {
-            AlertDialog(
-                onDismissRequest = { falhaAutenticacao.value = false },
-                title = { Text("Erro de Autenticação") },
-                text = { Text("Usuário ou senha estão incorretos.") },
-                confirmButton = {
-                    TextButton(onClick = {
-                        falhaAutenticacao.value = false
-                    }) {
-                        Text(
-                       text =  "OK",
-                            style = TextStyle(
-                                color = Color.White
-                            )
+    if (falhaAutenticacao.collectAsState().value) {
+        AlertDialog(
+            onDismissRequest = { falhaAutenticacao.value = false },
+            title = { Text("Erro de Autenticação") },
+            text = { Text("Usuário ou senha estão incorretos.") },
+            confirmButton = {
+                TextButton(onClick = {
+                    falhaAutenticacao.value = false
+                }) {
+                    Text(
+                        text = "OK",
+                        style = TextStyle(
+                            color = Color.White
                         )
-                    }
-                },
-                contentColor = Color.White,
-                backgroundColor = darkBlueColor,
-            )
-        }
+                    )
+                }
+            },
+            contentColor = Color.White,
+            backgroundColor = darkBlueColor,
+        )
     }
 }
 
