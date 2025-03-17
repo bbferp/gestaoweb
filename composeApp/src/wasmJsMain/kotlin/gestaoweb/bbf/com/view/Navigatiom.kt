@@ -47,7 +47,6 @@ val itemMenuSelected = MutableStateFlow(0)
         elevation = 3.dp,
         backgroundColor = Theme.transparentColor,
     ) {
-
         menuListNames.forEachIndexed { index, item ->
             val isSelected = itemSelected == index
 
