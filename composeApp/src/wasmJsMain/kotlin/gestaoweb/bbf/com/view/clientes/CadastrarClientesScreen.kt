@@ -27,11 +27,14 @@ import androidx.compose.ui.unit.sp
 import gestaoweb.bbf.com.model.ClienteDto
 import gestaoweb.bbf.com.model.EnderecoDto
 import gestaoweb.bbf.com.viewmodel.*
+import gestaoweb.composeapp.generated.resources.Res
+import gestaoweb.composeapp.generated.resources.client
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.bff.erp.util.Format.formatCnpj
 import org.bff.erp.util.Format.formatCpf
 import org.bff.erp.util.Format.formatDataNascimento
 import org.bff.erp.util.Format.formatTelefone
+import org.jetbrains.compose.resources.painterResource
 
 var limparCampos = MutableStateFlow(false)
 var abrirControleCreditoView = MutableStateFlow(false)
@@ -70,7 +73,7 @@ fun cadastrarClientes() {
 
     Card(
         modifier = Modifier
-            .padding(start = 130.dp, end = 25.dp, top = 50.dp),
+            .padding(start = 150.dp, end = 25.dp, top = 50.dp),
         elevation = 4.dp
     ) {
         Column(
@@ -83,25 +86,23 @@ fun cadastrarClientes() {
                     onClick = {
                     }) {
                     Icon(
+                        painterResource(Res.drawable.ic_d.pessoais),
                         tint = Color.Black,
-                        imageVector = Icons.Default.ArrowBack,
-                        contentDescription = "Voltar",
+                        contentDescription = "D.Pessoais",
                         modifier = Modifier
                             .size(15.dp)
                     )
-                }
-                Spacer(modifier = Modifier.weight(1f))
-
-                IconButton(
-                    onClick = {
-                        limparCampos.value = true
-                    },
-
-                    ) {
                     Icon(
+                        painterResource(Res.drawable.ic_financeiro),
                         tint = Color.Black,
-                        imageVector = Icons.Default.Delete,
-                        contentDescription = "limpar Página",
+                        contentDescription = "Financeiro",
+                        modifier = Modifier
+                            .size(15.dp)
+                    )
+                    Icon(
+                        painterResource(Res.drawable.ic_pedido),
+                        tint = Color.Black,
+                        contentDescription = "Pedido",
                         modifier = Modifier
                             .size(15.dp)
                     )
