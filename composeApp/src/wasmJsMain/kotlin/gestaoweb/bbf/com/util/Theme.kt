@@ -9,13 +9,18 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 
 
 object Theme {
 
     val transparentColor = Color(0x00000000)
     val  darkBlueColorTransparent = Color(0x340a1f44)
+    val  colorIconClient = Color(0xfffc7900)
     val  darkBlueColor = Color(0xbb0a1f44)
+    val heightField = 55.dp
+    val fontDefault = 10.sp
     val gradientBackground = Brush.verticalGradient(
         colors = listOf(
             Color(0xFF597395),
