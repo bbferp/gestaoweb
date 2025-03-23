@@ -93,8 +93,8 @@ fun cadastrarClientes() {
             Row (
                 modifier = Modifier
                     .width(400.dp)
-                    .border(1.dp, Color.Gray, RoundedCornerShape(topEnd = 8.dp, bottomEnd = 32.dp))
-                    .background(backgroundCard, RoundedCornerShape(topEnd = 8.dp, bottomEnd = 32.dp))
+                    .border(1.dp, Color.Gray, RoundedCornerShape(topEnd = 4.dp, bottomEnd = 50.dp))
+                    .background(backgroundCard, RoundedCornerShape(topEnd = 8.dp, bottomEnd = 50.dp))
             ){
                 dadosPessoaisIcon(onClick = { abrirDadosPessoais.value = !abrirDadosPessoais.value })
                 financeiroIcon(onClick = { abrirFinanceiro.value = !abrirFinanceiro.value })
@@ -103,12 +103,11 @@ fun cadastrarClientes() {
             Card(
                 modifier = Modifier
                     .background(backgroundCard)
-                    .padding(start = 50.dp, end = 25.dp, top = 50.dp, bottom = 20.dp),
+                    .padding(start = 50.dp, end = 25.dp, top = 30.dp, bottom = 20.dp),
                 elevation = 4.dp
             ) {
                 Column(
                     modifier = Modifier
-                        .border(1.dp, Color.Gray, RoundedCornerShape(8.dp))
                         .padding(8.dp),
                     verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
