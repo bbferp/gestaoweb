@@ -1,8 +1,11 @@
 package gestaoweb.bbf.com.view.clientes
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.DrawerDefaults.backgroundColor
@@ -26,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import gestaoweb.bbf.com.model.ClienteDto
 import gestaoweb.bbf.com.model.EnderecoDto
+import gestaoweb.bbf.com.util.Theme.backgroundCard
 import gestaoweb.bbf.com.util.Theme.colorIconClient
 import gestaoweb.bbf.com.util.Theme.darkBlueColor
 import gestaoweb.bbf.com.util.Theme.fontDefault
@@ -79,224 +83,226 @@ fun cadastrarClientes() {
     val observacao = remember { FocusRequester() }
     val cadastrar = remember { FocusRequester() }
 
-
-
     Card(
-        modifier = Modifier
-            .padding(start = 180.dp, end = 25.dp, top = 50.dp),
-        elevation = 4.dp
+      modifier = Modifier
+          .padding(start = 200.dp,top = 50.dp,end = 40.dp, bottom = 40.dp)
     ) {
         Column(
-            modifier = Modifier
-                .padding(8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp)
+            modifier = Modifier.background(backgroundCard)
         ) {
-            Row {
-                dadosPessoaisIcon(onClick = {abrirDadosPessoais.value = !abrirDadosPessoais.value})
-                financeiroIcon  (onClick = { abrirFinanceiro.value = !abrirFinanceiro.value})
-                pedidoIcon  (onClick = { abrirPedido.value = !abrirPedido.value})
+            Row (
+                modifier = Modifier
+                    .width(400.dp)
+                    .border(1.dp, Color.Gray, RoundedCornerShape(topEnd = 8.dp, bottomEnd = 32.dp))
+                    .background(backgroundCard, RoundedCornerShape(topEnd = 8.dp, bottomEnd = 32.dp))
+            ){
+                dadosPessoaisIcon(onClick = { abrirDadosPessoais.value = !abrirDadosPessoais.value })
+                financeiroIcon(onClick = { abrirFinanceiro.value = !abrirFinanceiro.value })
+                pedidoIcon(onClick = { abrirPedido.value = !abrirPedido.value })
             }
-
-            Row {
-                OutlinedTextField(
-                    value = cnpjValue.value,
-                    onValueChange = { newValue ->
-                        val cleaned = newValue.text.replace("[^\\d]".toRegex(), "")
-                        val formattedCnpj = when {
-                            cleaned.length <= 11 -> formatCpf(cleaned)
-                            cleaned.length > 11 -> formatCnpj(cleaned)
-                            else -> cleaned
-                        }
-
-                        cnpjValue.value = TextFieldValue(
-                            AnnotatedString(formattedCnpj),
-                            TextRange(calculateCursorPosition(cleaned.length, formattedCnpj.length, formattedCnpj))
-                        )
-                        clienteDto.value.cnpj_cpf = formattedCnpj
-                    },
-
-                    label = {
-                        Text(
-                            "CNPJ/CPF",
-                            style = TextStyle(
-                                fontSize = fontDefault
-                            )
-                        )
-                    },
-                    textStyle = TextStyle(fontSize = fontDefault),
-                    keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
+            Card(
+                modifier = Modifier
+                    .background(backgroundCard)
+                    .padding(start = 50.dp, end = 25.dp, top = 50.dp, bottom = 20.dp),
+                elevation = 4.dp
+            ) {
+                Column(
                     modifier = Modifier
-                        .height(heightField)
-                        .width(180.dp)
-                        .focusRequester(cnpj)
-                        .onKeyEvent { keyEvent ->
-                            when {
-                                keyEvent.key == Key.Enter -> {
-                                    validarCpfCnpj(clienteDto.value.cnpj_cpf)
-                                    true
-                                }
-                                keyEvent.key == Key.Tab -> {
-                                    focusRequesterNome.requestFocus()
-                                    true
-                                }
-                                else -> false
-                            }
+                        .border(1.dp, Color.Gray, RoundedCornerShape(8.dp))
+                        .padding(8.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Row {
+                        novoCadastroIcon  (onClick = { abrirDadosPessoais.value = !abrirDadosPessoais.value })
+                        editarCadastroIcon  (onClick = { abrirFinanceiro.value = !abrirFinanceiro.value })
+                        excluirCadastroIcon (onClick = { abrirPedido.value = !abrirPedido.value })
+                    }
 
-                        },
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                        focusedBorderColor = darkBlueColor,
-                        focusedLabelColor = darkBlueColor,
-                        cursorColor = Color.Black,
-                        textColor = Color.Black
-                    ),
-                    trailingIcon = {
-                        Image(
-                            painter = rememberVectorPainter(image = Icons.Filled.Clear),
-                            contentDescription = "Cpj/cpf clean",
+                    Row {
+                        OutlinedTextField(
+                            value = cnpjValue.value,
+                            onValueChange = { newValue ->
+                                val cleaned = newValue.text.replace("[^\\d]".toRegex(), "")
+                                val formattedCnpj = when {
+                                    cleaned.length <= 11 -> formatCpf(cleaned)
+                                    cleaned.length > 11 -> formatCnpj(cleaned)
+                                    else -> cleaned
+                                }
+
+                                cnpjValue.value = TextFieldValue(
+                                    AnnotatedString(formattedCnpj),
+                                    TextRange(
+                                        calculateCursorPosition(
+                                            cleaned.length,
+                                            formattedCnpj.length,
+                                            formattedCnpj
+                                        )
+                                    )
+                                )
+                                clienteDto.value.cnpj_cpf = formattedCnpj
+                            },
+
+                            label = {
+                                Text(
+                                    "CNPJ/CPF",
+                                    style = TextStyle(
+                                        fontSize = fontDefault
+                                    )
+                                )
+                            },
+                            textStyle = TextStyle(fontSize = fontDefault),
+                            keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
                             modifier = Modifier
-                                .size(10.dp)
-                                .clickable { cnpjValue.value = TextFieldValue() }
+                                .height(heightField)
+                                .width(180.dp)
+                                .focusRequester(cnpj)
+                                .onKeyEvent { keyEvent ->
+                                    when {
+                                        keyEvent.key == Key.Enter -> {
+                                            validarCpfCnpj(clienteDto.value.cnpj_cpf)
+                                            true
+                                        }
+
+                                        keyEvent.key == Key.Tab -> {
+                                            focusRequesterNome.requestFocus()
+                                            true
+                                        }
+
+                                        else -> false
+                                    }
+
+                                },
+                            colors = TextFieldDefaults.outlinedTextFieldColors(
+                                focusedBorderColor = darkBlueColor,
+                                focusedLabelColor = darkBlueColor,
+                                cursorColor = Color.Black,
+                                textColor = Color.Black
+                            ),
+                            trailingIcon = {
+                                Image(
+                                    painter = rememberVectorPainter(image = Icons.Filled.Clear),
+                                    contentDescription = "Cpj/cpf clean",
+                                    modifier = Modifier
+                                        .size(10.dp)
+                                        .clickable { cnpjValue.value = TextFieldValue() }
+                                )
+                            }
+                        )
+
+                        OutlinedTextField(
+                            value = clienteDto.value.nome,
+                            onValueChange = { clienteDto.value.nome = it },
+                            label = {
+                                Text(
+                                    "Nome Cliente/RazãoSocial${if (clienteDto.value.nome.isEmpty() && errorMessage.isNotEmpty()) " *" else ""}",
+                                    style = TextStyle(
+                                        fontSize = fontDefault
+                                    )
+                                )
+                            },
+
+                            textStyle = TextStyle(fontSize = fontDefault),
+                            modifier = Modifier
+                                .height(heightField)
+                                .padding(start = 8.dp, end = 20.dp)
+                                .width(300.dp)
+                                .focusRequester(focusRequesterNome)
+                                .onKeyEvent { keyEvent ->
+                                    if (keyEvent.key == Key.Tab) {
+                                        focusRequesterNomeFantasia.requestFocus()
+                                        true
+                                    } else {
+                                        false
+                                    }
+                                },
+                            colors = TextFieldDefaults.outlinedTextFieldColors(
+                                focusedBorderColor = darkBlueColor,
+                                focusedLabelColor = darkBlueColor,
+                                cursorColor = Color.Black,
+                                textColor = Color.Black
+                            )
                         )
                     }
-                )
 
-                OutlinedTextField(
-                    value = clienteDto.value.nome,
-                    onValueChange = { clienteDto.value.nome = it },
-                    label = {
-                        Text(
-                            "Nome Cliente/RazãoSocial${if (clienteDto.value.nome.isEmpty() && errorMessage.isNotEmpty()) " *" else ""}",
-                            style = TextStyle(
-                                fontSize = fontDefault
+                    Row {
+                        OutlinedTextField(
+                            value = clienteDto.value.fantasia,
+                            onValueChange = { clienteDto.value.fantasia = it },
+                            label = {
+                                Text(
+                                    "Nome Fantasia",
+                                    style = TextStyle(fontSize = fontDefault)
+                                )
+                            },
+
+                            textStyle = TextStyle(fontSize = fontDefault),
+                            modifier = Modifier
+                                .height(heightField)
+                                .width(300.dp)
+                                .focusRequester(focusRequesterNomeFantasia)
+                                .onKeyEvent { keyEvent ->
+                                    if (keyEvent.key == Key.Tab) {
+                                        rg.requestFocus()
+                                        true
+                                    } else {
+                                        false
+                                    }
+                                },
+                            colors = TextFieldDefaults.outlinedTextFieldColors(
+                                focusedBorderColor = darkBlueColor,
+                                focusedLabelColor = darkBlueColor,
+                                cursorColor = Color.Black,
+                                textColor = Color.Black
                             )
                         )
-                    },
 
-                    textStyle = TextStyle(fontSize = fontDefault),
-                    modifier = Modifier
-                        .height(heightField)
-                        .padding(start = 8.dp, end = 20.dp)
-                        .width(300.dp)
-                        .focusRequester(focusRequesterNome)
-                        .onKeyEvent { keyEvent ->
-                            if (keyEvent.key == Key.Tab) {
-                                focusRequesterNomeFantasia.requestFocus()
-                                true
-                            } else {
-                                false
-                            }
-                        },
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                        focusedBorderColor = darkBlueColor,
-                        focusedLabelColor = darkBlueColor,
-                        cursorColor = Color.Black,
-                        textColor = Color.Black
-                    )
-                )
-            }
-
-            Row {
-                OutlinedTextField(
-                    value = clienteDto.value.fantasia,
-                    onValueChange = { clienteDto.value.fantasia = it },
-                    label = {
-                        Text(
-                            "Nome Fantasia",
-                            style = TextStyle(fontSize = fontDefault)
-                        )
-                    },
-
-                    textStyle = TextStyle(fontSize = fontDefault),
-                    modifier = Modifier
-                        .height(heightField)
-                        .width(300.dp)
-                        .focusRequester(focusRequesterNomeFantasia)
-                        .onKeyEvent { keyEvent ->
-                            if (keyEvent.key == Key.Tab) {
-                                rg.requestFocus()
-                                true
-                            } else {
-                                false
-                            }
-                        },
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                        focusedBorderColor = darkBlueColor,
-                        focusedLabelColor = darkBlueColor,
-                        cursorColor = Color.Black,
-                        textColor = Color.Black
-                    )
-                )
-
-                OutlinedTextField(
-                    value = clienteDto.value.rg_ie,
-                    onValueChange = { clienteDto.value.rg_ie = it },
-                    label = {
-                        Text(
-                            "RG/IE",
-                            style = TextStyle(fontSize = fontDefault)
-                        )
-                    },
-                    textStyle = TextStyle(fontSize = fontDefault),
-                    modifier = Modifier
-                        .padding(start = 8.dp)
-                        .height(heightField)
-                        .width(200.dp)
-                        .focusRequester(rg)
-                        .onKeyEvent { keyEvent ->
-                            if (keyEvent.key == Key.Tab) {
-                                cep.requestFocus()
-                                true
-                            } else {
-                                false
-                            }
-                        },
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                        focusedBorderColor = darkBlueColor,
-                        focusedLabelColor = darkBlueColor,
-                        cursorColor = Color.Black,
-                        textColor = Color.Black
-                    )
-                )
-            }
-
-            Row {
-                OutlinedTextField(
-                    value = enderecoDto.value.cep,
-                    onValueChange = { enderecoDto.value.cep = it },
-                    label = {
-                        Text(
-                            "Cep${if (enderecoDto.value.cep.isEmpty() && errorMessage.isNotEmpty()) " *" else ""}",
-                            style = TextStyle(fontSize = fontDefault)
-                        )
-                    },
-                    textStyle = TextStyle(fontSize = fontDefault),
-                    modifier = Modifier
-                        .width(200.dp)
-                        .height(heightField)
-                        .focusRequester(cep)
-                        .onKeyEvent { keyEvent ->
-                            if (keyEvent.key == Key.Enter) {
-                                if (enderecoDto.value.cep.isNotEmpty()) {
-                                    fetchCep(enderecoDto.value.cep)
-                                }
-                                true
-                            } else {
-                                false
-                            }
-                        },
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                        focusedBorderColor = darkBlueColor,
-                        focusedLabelColor = darkBlueColor,
-                        cursorColor = Color.Black,
-                        textColor = Color.Black
-                    ),
-                    trailingIcon = {
-                        Image(
-                            painter = rememberVectorPainter(image = Icons.Filled.Search),
-                            contentDescription = "Search",
+                        OutlinedTextField(
+                            value = clienteDto.value.rg_ie,
+                            onValueChange = { clienteDto.value.rg_ie = it },
+                            label = {
+                                Text(
+                                    "RG/IE",
+                                    style = TextStyle(fontSize = fontDefault)
+                                )
+                            },
+                            textStyle = TextStyle(fontSize = fontDefault),
                             modifier = Modifier
-                                .clickable { fetchCep(enderecoDto.value.cep) }
-                                .focusRequester(search)
+                                .padding(start = 8.dp)
+                                .height(heightField)
+                                .width(200.dp)
+                                .focusRequester(rg)
+                                .onKeyEvent { keyEvent ->
+                                    if (keyEvent.key == Key.Tab) {
+                                        cep.requestFocus()
+                                        true
+                                    } else {
+                                        false
+                                    }
+                                },
+                            colors = TextFieldDefaults.outlinedTextFieldColors(
+                                focusedBorderColor = darkBlueColor,
+                                focusedLabelColor = darkBlueColor,
+                                cursorColor = Color.Black,
+                                textColor = Color.Black
+                            )
+                        )
+                    }
+
+                    Row {
+                        OutlinedTextField(
+                            value = enderecoDto.value.cep,
+                            onValueChange = { enderecoDto.value.cep = it },
+                            label = {
+                                Text(
+                                    "Cep${if (enderecoDto.value.cep.isEmpty() && errorMessage.isNotEmpty()) " *" else ""}",
+                                    style = TextStyle(fontSize = fontDefault)
+                                )
+                            },
+                            textStyle = TextStyle(fontSize = fontDefault),
+                            modifier = Modifier
+                                .width(200.dp)
+                                .height(heightField)
+                                .focusRequester(cep)
                                 .onKeyEvent { keyEvent ->
                                     if (keyEvent.key == Key.Enter) {
                                         if (enderecoDto.value.cep.isNotEmpty()) {
@@ -306,357 +312,382 @@ fun cadastrarClientes() {
                                     } else {
                                         false
                                     }
-                                }
-                        )
-                    },
-                    maxLines = 1,
-                    singleLine = true
-                )
-                OutlinedTextField(
-                    value = enderecoDto.value.logradouro,
-                    onValueChange = { enderecoDto.value.logradouro = it },
-                    label = {
-                        Text(
-                            "Logradouro",
-                            style = TextStyle(
-                                fontSize = fontDefault
-                            )
-                        )
-                    },
-
-                    textStyle = TextStyle(fontSize = fontDefault),
-                    modifier = Modifier
-                        .height(heightField)
-                        .padding(start = 8.dp)
-                        .width(350.dp)
-                        .focusRequester(logradouro)
-                        .onKeyEvent { keyEvent ->
-                            if (keyEvent.key == Key.Tab) {
-                                numero.requestFocus()
-                                true
-                            } else {
-                                false
-                            }
-                        },
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                        focusedBorderColor = darkBlueColor,
-                        focusedLabelColor = darkBlueColor,
-                        cursorColor = Color.Black,
-                        textColor = Color.Black
-                    )
-                )
-
-                OutlinedTextField(
-                    value = enderecoDto.value.numero,
-                    onValueChange = { enderecoDto.value.numero = it },
-                    label = {
-                        Text(
-                            "Numero",
-                            style = TextStyle(fontSize = fontDefault)
-                        )
-                    },
-
-                    textStyle = TextStyle(fontSize = fontDefault),
-                    modifier = Modifier
-                        .padding(start = 8.dp)
-                        .height(heightField)
-                        .width(100.dp)
-                        .focusRequester(numero)
-                        .onKeyEvent { keyEvent ->
-                            if (keyEvent.key == Key.Tab) {
-                                bairro.requestFocus()
-                                true
-                            } else {
-                                false
-                            }
-                        },
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                        focusedBorderColor = darkBlueColor,
-                        focusedLabelColor = darkBlueColor,
-                        cursorColor = Color.Black,
-                        textColor = Color.Black
-                    )
-                )
-
-                OutlinedTextField(
-                    value = enderecoDto.value.bairro,
-                    onValueChange = { enderecoDto.value.bairro = it },
-                    label = {
-                        Text(
-                            "Bairro",
-                            style = TextStyle(
-                                fontSize = fontDefault
-                            )
-                        )
-                    },
-
-                    textStyle = TextStyle(fontSize = fontDefault),
-                    modifier = Modifier
-                        .padding(start = 8.dp)
-                        .height(heightField)
-                        .width(250.dp)
-                        .focusRequester(bairro)
-                        .onKeyEvent { keyEvent ->
-                            if (keyEvent.key == Key.Tab) {
-                                cidade.requestFocus()
-                                true
-                            } else {
-                                false
-                            }
-                        },
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                        focusedBorderColor = darkBlueColor,
-                        focusedLabelColor = darkBlueColor,
-                        cursorColor = Color.Black,
-                        textColor = Color.Black
-                    )
-                )
-            }
-
-            Row{
-                OutlinedTextField(
-                    value = enderecoDto.value.localidade,
-                    onValueChange = { enderecoDto.value.localidade = it },
-                    label = {
-                        Text(
-                            "Cidade",
-                            style = TextStyle(
-                                fontSize = fontDefault
-                            )
-                        )
-                    },
-
-                    textStyle = TextStyle(fontSize = fontDefault),
-                    modifier = Modifier
-                        .height(heightField)
-                        .width(250.dp)
-                        .focusRequester(cidade)
-                        .onKeyEvent { keyEvent ->
-                            if (keyEvent.key == Key.Tab) {
-                                estado.requestFocus()
-                                true
-                            } else {
-                                false
-                            }
-                        },
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                        focusedBorderColor = darkBlueColor,
-                        focusedLabelColor = darkBlueColor,
-                        cursorColor = Color.Black,
-                        textColor = Color.Black
-                    )
-                )
-
-                OutlinedTextField(
-                    value = enderecoDto.value.estado,
-                    onValueChange = { enderecoDto.value.estado = it },
-                    label = {
-                        Text(
-                            "Estado",
-                            style = TextStyle(
-                                fontSize = fontDefault
-                            )
-                        )
-                    },
-
-                    textStyle = TextStyle(fontSize = fontDefault),
-                    modifier = Modifier
-                        .padding(start = 8.dp)
-                        .height(heightField)
-                        .width(150.dp)
-                        .focusRequester(estado)
-                        .onKeyEvent { keyEvent ->
-                            if (keyEvent.key == Key.Tab) {
-                                complemento.requestFocus()
-                                true
-                            } else {
-                                false
-                            }
-                        },
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                        focusedBorderColor = darkBlueColor,
-                        focusedLabelColor = darkBlueColor,
-                        cursorColor = Color.Black,
-                        textColor = Color.Black
-                    )
-                )
-
-                OutlinedTextField(
-                    value = enderecoDto.value.complemento,
-                    onValueChange = { enderecoDto.value.complemento = it },
-                    label = {
-                        Text(
-                            "Complemento",
-                            style = TextStyle(fontSize = fontDefault)
-                        )
-                    },
-
-                    textStyle = TextStyle(fontSize = fontDefault),
-                    modifier = Modifier
-                        .height(heightField)
-                        .width(250.dp)
-                        .padding(start = 8.dp)
-                        .focusRequester(complemento)
-                        .onKeyEvent { keyEvent ->
-                            if (keyEvent.key == Key.Tab) {
-                                telefone.requestFocus()
-                                true
-                            } else {
-                                false
-                            }
-                        },
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                        focusedBorderColor = darkBlueColor,
-                        focusedLabelColor = darkBlueColor,
-                        cursorColor = Color.Black,
-                        textColor = Color.Black
-                    )
-                )
-            }
-
-            Row {
-                OutlinedTextField(
-                    value = telefoneValue.value,
-                    onValueChange = { newValue ->
-                        newValue.text.replace("[^\\d]".toRegex(), "").let { cleaned ->
-                            formatTelefone(cleaned).let {
-                                telefoneValue.value = TextFieldValue(
-                                    AnnotatedString(it),
-                                    TextRange(calculateCursorPosition(cleaned.length, it.length, it))
+                                },
+                            colors = TextFieldDefaults.outlinedTextFieldColors(
+                                focusedBorderColor = darkBlueColor,
+                                focusedLabelColor = darkBlueColor,
+                                cursorColor = Color.Black,
+                                textColor = Color.Black
+                            ),
+                            trailingIcon = {
+                                Image(
+                                    painter = rememberVectorPainter(image = Icons.Filled.Search),
+                                    contentDescription = "Search",
+                                    modifier = Modifier
+                                        .clickable { fetchCep(enderecoDto.value.cep) }
+                                        .focusRequester(search)
+                                        .onKeyEvent { keyEvent ->
+                                            if (keyEvent.key == Key.Enter) {
+                                                if (enderecoDto.value.cep.isNotEmpty()) {
+                                                    fetchCep(enderecoDto.value.cep)
+                                                }
+                                                true
+                                            } else {
+                                                false
+                                            }
+                                        }
                                 )
-                                clienteDto.value.telefone = it
-                            }
+                            },
+                            maxLines = 1,
+                            singleLine = true
+                        )
+                        OutlinedTextField(
+                            value = enderecoDto.value.logradouro,
+                            onValueChange = { enderecoDto.value.logradouro = it },
+                            label = {
+                                Text(
+                                    "Logradouro",
+                                    style = TextStyle(
+                                        fontSize = fontDefault
+                                    )
+                                )
+                            },
 
-                        }
-
-                    },
-                    label = {
-                        Text(
-                            "Telefone${if (clienteDto.value.telefone.isEmpty() && errorMessage.isNotEmpty()) " *" else ""}",
-                            style = TextStyle(
-                                fontSize = fontDefault
+                            textStyle = TextStyle(fontSize = fontDefault),
+                            modifier = Modifier
+                                .height(heightField)
+                                .padding(start = 8.dp)
+                                .width(350.dp)
+                                .focusRequester(logradouro)
+                                .onKeyEvent { keyEvent ->
+                                    if (keyEvent.key == Key.Tab) {
+                                        numero.requestFocus()
+                                        true
+                                    } else {
+                                        false
+                                    }
+                                },
+                            colors = TextFieldDefaults.outlinedTextFieldColors(
+                                focusedBorderColor = darkBlueColor,
+                                focusedLabelColor = darkBlueColor,
+                                cursorColor = Color.Black,
+                                textColor = Color.Black
                             )
                         )
-                    },
 
-                    textStyle = TextStyle(fontSize = fontDefault),
-                    modifier = Modifier
-                        .height(heightField)
-                        .width(150.dp)
-                        .focusRequester(telefone)
-                        .onKeyEvent { keyEvent ->
-                            if (keyEvent.key == Key.Tab) {
-                                dataNascimento.requestFocus()
-                                true
-                            } else {
-                                false
-                            }
-                        },
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                        focusedBorderColor = darkBlueColor,
-                        focusedLabelColor = darkBlueColor,
-                        cursorColor = Color.Black,
-                        textColor = Color.Black
-                    )
-                )
+                        OutlinedTextField(
+                            value = enderecoDto.value.numero,
+                            onValueChange = { enderecoDto.value.numero = it },
+                            label = {
+                                Text(
+                                    "Numero",
+                                    style = TextStyle(fontSize = fontDefault)
+                                )
+                            },
 
-                OutlinedTextField(
-                    value = clienteDto.value.email,
-                    onValueChange = { clienteDto.value.email = it },
-                    label = {
-                        Text(
-                            "E-mail",
-                            style = TextStyle(
-                                fontSize = fontDefault
+                            textStyle = TextStyle(fontSize = fontDefault),
+                            modifier = Modifier
+                                .padding(start = 8.dp)
+                                .height(heightField)
+                                .width(100.dp)
+                                .focusRequester(numero)
+                                .onKeyEvent { keyEvent ->
+                                    if (keyEvent.key == Key.Tab) {
+                                        bairro.requestFocus()
+                                        true
+                                    } else {
+                                        false
+                                    }
+                                },
+                            colors = TextFieldDefaults.outlinedTextFieldColors(
+                                focusedBorderColor = darkBlueColor,
+                                focusedLabelColor = darkBlueColor,
+                                cursorColor = Color.Black,
+                                textColor = Color.Black
                             )
                         )
-                    },
-                    textStyle = TextStyle(fontSize = fontDefault),
-                    modifier = Modifier
-                        .padding(start = 8.dp)
-                        .height(heightField)
-                        .width(200.dp)
-                        .focusRequester(email)
-                        .onKeyEvent { keyEvent ->
-                            if (keyEvent.key == Key.Tab) {
-                                observacao.requestFocus()
-                                true
-                            } else {
-                                false
-                            }
+
+                        OutlinedTextField(
+                            value = enderecoDto.value.bairro,
+                            onValueChange = { enderecoDto.value.bairro = it },
+                            label = {
+                                Text(
+                                    "Bairro",
+                                    style = TextStyle(
+                                        fontSize = fontDefault
+                                    )
+                                )
+                            },
+
+                            textStyle = TextStyle(fontSize = fontDefault),
+                            modifier = Modifier
+                                .padding(start = 8.dp)
+                                .height(heightField)
+                                .width(250.dp)
+                                .focusRequester(bairro)
+                                .onKeyEvent { keyEvent ->
+                                    if (keyEvent.key == Key.Tab) {
+                                        cidade.requestFocus()
+                                        true
+                                    } else {
+                                        false
+                                    }
+                                },
+                            colors = TextFieldDefaults.outlinedTextFieldColors(
+                                focusedBorderColor = darkBlueColor,
+                                focusedLabelColor = darkBlueColor,
+                                cursorColor = Color.Black,
+                                textColor = Color.Black
+                            )
+                        )
+                    }
+
+                    Row {
+                        OutlinedTextField(
+                            value = enderecoDto.value.localidade,
+                            onValueChange = { enderecoDto.value.localidade = it },
+                            label = {
+                                Text(
+                                    "Cidade",
+                                    style = TextStyle(
+                                        fontSize = fontDefault
+                                    )
+                                )
+                            },
+
+                            textStyle = TextStyle(fontSize = fontDefault),
+                            modifier = Modifier
+                                .height(heightField)
+                                .width(250.dp)
+                                .focusRequester(cidade)
+                                .onKeyEvent { keyEvent ->
+                                    if (keyEvent.key == Key.Tab) {
+                                        estado.requestFocus()
+                                        true
+                                    } else {
+                                        false
+                                    }
+                                },
+                            colors = TextFieldDefaults.outlinedTextFieldColors(
+                                focusedBorderColor = darkBlueColor,
+                                focusedLabelColor = darkBlueColor,
+                                cursorColor = Color.Black,
+                                textColor = Color.Black
+                            )
+                        )
+
+                        OutlinedTextField(
+                            value = enderecoDto.value.estado,
+                            onValueChange = { enderecoDto.value.estado = it },
+                            label = {
+                                Text(
+                                    "Estado",
+                                    style = TextStyle(
+                                        fontSize = fontDefault
+                                    )
+                                )
+                            },
+
+                            textStyle = TextStyle(fontSize = fontDefault),
+                            modifier = Modifier
+                                .padding(start = 8.dp)
+                                .height(heightField)
+                                .width(150.dp)
+                                .focusRequester(estado)
+                                .onKeyEvent { keyEvent ->
+                                    if (keyEvent.key == Key.Tab) {
+                                        complemento.requestFocus()
+                                        true
+                                    } else {
+                                        false
+                                    }
+                                },
+                            colors = TextFieldDefaults.outlinedTextFieldColors(
+                                focusedBorderColor = darkBlueColor,
+                                focusedLabelColor = darkBlueColor,
+                                cursorColor = Color.Black,
+                                textColor = Color.Black
+                            )
+                        )
+
+                        OutlinedTextField(
+                            value = enderecoDto.value.complemento,
+                            onValueChange = { enderecoDto.value.complemento = it },
+                            label = {
+                                Text(
+                                    "Complemento",
+                                    style = TextStyle(fontSize = fontDefault)
+                                )
+                            },
+
+                            textStyle = TextStyle(fontSize = fontDefault),
+                            modifier = Modifier
+                                .height(heightField)
+                                .width(250.dp)
+                                .padding(start = 8.dp)
+                                .focusRequester(complemento)
+                                .onKeyEvent { keyEvent ->
+                                    if (keyEvent.key == Key.Tab) {
+                                        telefone.requestFocus()
+                                        true
+                                    } else {
+                                        false
+                                    }
+                                },
+                            colors = TextFieldDefaults.outlinedTextFieldColors(
+                                focusedBorderColor = darkBlueColor,
+                                focusedLabelColor = darkBlueColor,
+                                cursorColor = Color.Black,
+                                textColor = Color.Black
+                            )
+                        )
+                    }
+
+                    Row {
+                        OutlinedTextField(
+                            value = telefoneValue.value,
+                            onValueChange = { newValue ->
+                                newValue.text.replace("[^\\d]".toRegex(), "").let { cleaned ->
+                                    formatTelefone(cleaned).let {
+                                        telefoneValue.value = TextFieldValue(
+                                            AnnotatedString(it),
+                                            TextRange(calculateCursorPosition(cleaned.length, it.length, it))
+                                        )
+                                        clienteDto.value.telefone = it
+                                    }
+
+                                }
+
+                            },
+                            label = {
+                                Text(
+                                    "Telefone${if (clienteDto.value.telefone.isEmpty() && errorMessage.isNotEmpty()) " *" else ""}",
+                                    style = TextStyle(
+                                        fontSize = fontDefault
+                                    )
+                                )
+                            },
+
+                            textStyle = TextStyle(fontSize = fontDefault),
+                            modifier = Modifier
+                                .height(heightField)
+                                .width(150.dp)
+                                .focusRequester(telefone)
+                                .onKeyEvent { keyEvent ->
+                                    if (keyEvent.key == Key.Tab) {
+                                        dataNascimento.requestFocus()
+                                        true
+                                    } else {
+                                        false
+                                    }
+                                },
+                            colors = TextFieldDefaults.outlinedTextFieldColors(
+                                focusedBorderColor = darkBlueColor,
+                                focusedLabelColor = darkBlueColor,
+                                cursorColor = Color.Black,
+                                textColor = Color.Black
+                            )
+                        )
+
+                        OutlinedTextField(
+                            value = clienteDto.value.email,
+                            onValueChange = { clienteDto.value.email = it },
+                            label = {
+                                Text(
+                                    "E-mail",
+                                    style = TextStyle(
+                                        fontSize = fontDefault
+                                    )
+                                )
+                            },
+                            textStyle = TextStyle(fontSize = fontDefault),
+                            modifier = Modifier
+                                .padding(start = 8.dp)
+                                .height(heightField)
+                                .width(200.dp)
+                                .focusRequester(email)
+                                .onKeyEvent { keyEvent ->
+                                    if (keyEvent.key == Key.Tab) {
+                                        observacao.requestFocus()
+                                        true
+                                    } else {
+                                        false
+                                    }
+                                },
+
+                            colors = TextFieldDefaults.outlinedTextFieldColors(
+                                focusedBorderColor = darkBlueColor,
+                                focusedLabelColor = darkBlueColor,
+                                cursorColor = Color.Black,
+                                textColor = Color.Black
+                            )
+                        )
+                    }
+
+                    OutlinedTextField(
+                        value = clienteDto.value.observacao,
+                        onValueChange = { clienteDto.value.observacao = it },
+                        label = {
+                            Text(
+                                "Observação",
+                                style = TextStyle(fontSize = fontDefault)
+                            )
                         },
 
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                        focusedBorderColor = darkBlueColor,
-                        focusedLabelColor = darkBlueColor,
-                        cursorColor = Color.Black,
-                        textColor = Color.Black
+                        textStyle = TextStyle(fontSize = fontDefault),
+                        modifier = Modifier
+                            .width(500.dp)
+                            .height(heightField)
+                            .focusRequester(observacao)
+                            .onKeyEvent { keyEvent ->
+                                if (keyEvent.key == Key.Tab) {
+                                    cadastrar.requestFocus()
+                                    true
+                                } else {
+                                    false
+                                }
+                            },
+                        colors = TextFieldDefaults.outlinedTextFieldColors(
+                            focusedBorderColor = darkBlueColor,
+                            focusedLabelColor = darkBlueColor,
+                            cursorColor = Color.Black,
+                            textColor = Color.Black
+                        )
                     )
-                )
-            }
 
-            OutlinedTextField(
-                value = clienteDto.value.observacao,
-                onValueChange = { clienteDto.value.observacao = it },
-                label = {
-                    Text(
-                        "Observação",
-                        style = TextStyle(fontSize = fontDefault)
-                    )
-                },
+                    Row {
+                        Button(
+                            onClick = {
+                                errorMessage = ""
+                                if (clienteDto.value.cnpj_cpf.isEmpty()) {
+                                    clienteDto.value.cnpj_cpf = cpfDto
+                                }
 
-                textStyle = TextStyle(fontSize = fontDefault),
-                modifier = Modifier
-                    .width(500.dp)
-                    .height(heightField)
-                    .focusRequester(observacao)
-                    .onKeyEvent { keyEvent ->
-                        if (keyEvent.key == Key.Tab) {
-                            cadastrar.requestFocus()
-                            true
-                        } else {
-                            false
+                                if (validarCampos(clienteDto.value, enderecoDto.value)) {
+                                    bindCadastroCliente()
+                                } else {
+                                    errorMessage = "Por favor, preencha todos os campos obrigatórios(*)."
+                                }
+                            },
+                            modifier = Modifier
+                                .padding(start = 100.dp, top = 10.dp)
+                                .height(35.dp)
+                                .width(250.dp)
+                                .focusRequester(cadastrar),
+                            colors = ButtonDefaults.buttonColors(backgroundColor = backgroundColor)
+                        ) {
+                            Text(text = "Cadastrar", color = Color.White)
                         }
-                    },
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedBorderColor = darkBlueColor,
-                    focusedLabelColor = darkBlueColor,
-                    cursorColor = Color.Black,
-                    textColor = Color.Black
-                )
-            )
-
-            Row {
-                Button(
-                    onClick = {
-                        errorMessage = ""
-                        if(clienteDto.value.cnpj_cpf.isEmpty()){
-                            clienteDto.value.cnpj_cpf = cpfDto
+                        observarRetornoStatus()
+                        if (errorMessage.isNotEmpty()) {
+                            Text(
+                                modifier = Modifier.padding(start = 10.dp),
+                                text = errorMessage,
+                                color = Color.Red,
+                                style = TextStyle(fontSize = 12.sp)
+                            )
                         }
-
-                        if (validarCampos(clienteDto.value, enderecoDto.value)) {
-                            bindCadastroCliente()
-                        } else {
-                            errorMessage = "Por favor, preencha todos os campos obrigatórios(*)."
-                        }
-                    },
-                    modifier = Modifier
-                        .padding(start = 100.dp, top = 10.dp)
-                        .height(35.dp)
-                        .width(250.dp)
-                        .focusRequester(cadastrar),
-                    colors = ButtonDefaults.buttonColors(backgroundColor = backgroundColor)
-                ) {
-                    Text(text = "Cadastrar", color = Color.White)
-                }
-                observarRetornoStatus()
-                if (errorMessage.isNotEmpty()) {
-                    Text(
-                        modifier = Modifier.padding(start = 10.dp),
-                        text = errorMessage,
-                        color = Color.Red,
-                        style = TextStyle(fontSize = 12.sp)
-                    )
+                    }
                 }
             }
         }
@@ -779,7 +810,79 @@ fun dadosPessoaisIcon(onClick: () -> Unit){
             modifier = Modifier.padding(
                 top = 16.dp
             ),
-            style = TextStyle(fontSize = 12.sp)
+            style = TextStyle(fontSize = fontDefault)
+        )
+    }
+}
+
+@Composable
+fun novoCadastroIcon(onClick: () -> Unit){
+    Row(modifier =
+        Modifier.padding(8.dp)
+        ) {
+        IconButton(onClick = onClick) {
+            Icon(
+                painterResource(Res.drawable.ic_novo),
+                contentDescription = "NOVO",
+                tint = colorIconClient,
+                )
+        }
+
+        Text(
+            text = "NOVO",
+            color = Color.Black,
+            modifier = Modifier.padding(
+                top = 16.dp
+            ),
+            style = TextStyle(fontSize = fontDefault)
+        )
+    }
+}
+
+@Composable
+fun editarCadastroIcon(onClick: () -> Unit){
+    Row(modifier =
+        Modifier.padding(8.dp)
+        ) {
+        IconButton(onClick = onClick) {
+            Icon(
+                painterResource(Res.drawable.ic_editar),
+                contentDescription = "EDITAR",
+                tint = colorIconClient,
+                )
+        }
+
+        Text(
+            text = "EDITAR",
+            color = Color.Black,
+            modifier = Modifier.padding(
+                top = 16.dp
+            ),
+            style = TextStyle(fontSize = fontDefault)
+        )
+    }
+}
+
+@Composable
+fun excluirCadastroIcon(onClick: () -> Unit){
+    Row(modifier =
+        Modifier.padding(8.dp)
+    ) {
+        IconButton(onClick = onClick) {
+            Icon(
+                painterResource(Res.drawable.ic_excluir),
+                contentDescription = "EXCLUIR",
+                tint = colorIconClient,
+            )
+        }
+
+        Text(
+            text = "EXCLUIR",
+            color = Color.Black,
+            modifier = Modifier.padding(
+                top = 16.dp
+            ),
+            style = TextStyle(fontSize = fontDefault)
         )
     }
 }
@@ -801,7 +904,7 @@ fun financeiroIcon(onClick: () -> Unit) {
             modifier = Modifier.padding(
                 top = 16.dp
             ),
-            style = TextStyle(fontSize = 12.sp)
+            style = TextStyle(fontSize = fontDefault)
         )
     }
 }
@@ -823,7 +926,7 @@ fun pedidoIcon(onClick: () -> Unit) {
             modifier = Modifier.padding(
                 top = 16.dp
             ),
-            style = TextStyle(fontSize = 12.sp)
+            style = TextStyle(fontSize = fontDefault)
         )
     }
 }
