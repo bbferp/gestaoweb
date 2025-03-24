@@ -79,6 +79,7 @@ fun cadastrarClientes() {
     val complemento = remember { FocusRequester() }
     val estado = remember { FocusRequester() }
     val cep = remember { FocusRequester() }
+    val vendedor = remember { FocusRequester() }
     val email = remember { FocusRequester() }
     val dataNascimento = remember { FocusRequester() }
     val rg = remember { FocusRequester() }
@@ -161,12 +162,10 @@ fun cadastrarClientes() {
                                             validarCpfCnpj(clienteDto.value.cnpj_cpf)
                                             true
                                         }
-
                                         keyEvent.key == Key.Tab -> {
-                                            focusRequesterNome.requestFocus()
+                                            rg.requestFocus()
                                             true
                                         }
-
                                         else -> false
                                     }
 
@@ -205,7 +204,7 @@ fun cadastrarClientes() {
                                 .focusRequester(rg)
                                 .onKeyEvent { keyEvent ->
                                     if (keyEvent.key == Key.Tab) {
-                                        cep.requestFocus()
+                                        vendedor.requestFocus()
                                         true
                                     } else {
                                         false
@@ -232,10 +231,10 @@ fun cadastrarClientes() {
                                 .padding(start = 4.dp)
                                 .height(heightField)
                                 .width(200.dp)
-                                .focusRequester(rg)
+                                .focusRequester(vendedor)
                                 .onKeyEvent { keyEvent ->
                                     if (keyEvent.key == Key.Tab) {
-                                        cep.requestFocus()
+                                        telefone.requestFocus()
                                         true
                                     } else {
                                         false
@@ -280,7 +279,7 @@ fun cadastrarClientes() {
                                 .focusRequester(telefone)
                                 .onKeyEvent { keyEvent ->
                                     if (keyEvent.key == Key.Tab) {
-                                        dataNascimento.requestFocus()
+                                        focusRequesterNomeFantasia.requestFocus()
                                         true
                                     } else {
                                         false
@@ -313,7 +312,7 @@ fun cadastrarClientes() {
                                 .focusRequester(focusRequesterNomeFantasia)
                                 .onKeyEvent { keyEvent ->
                                     if (keyEvent.key == Key.Tab) {
-                                        rg.requestFocus()
+                                        focusRequesterNome.requestFocus()
                                         true
                                     } else {
                                         false
@@ -347,7 +346,7 @@ fun cadastrarClientes() {
                                 .focusRequester(focusRequesterNome)
                                 .onKeyEvent { keyEvent ->
                                     if (keyEvent.key == Key.Tab) {
-                                        focusRequesterNomeFantasia.requestFocus()
+                                        cep.requestFocus()
                                         true
                                     } else {
                                         false
@@ -360,7 +359,6 @@ fun cadastrarClientes() {
                                 textColor = Color.Black
                             )
                         )
-
                     }
 
                     Row {
@@ -572,7 +570,7 @@ fun cadastrarClientes() {
                                 .focusRequester(estado)
                                 .onKeyEvent { keyEvent ->
                                     if (keyEvent.key == Key.Tab) {
-                                        complemento.requestFocus()
+                                        email.requestFocus()
                                         true
                                     } else {
                                         false
@@ -588,8 +586,6 @@ fun cadastrarClientes() {
                     }
 
                     Row {
-
-
                         OutlinedTextField(
                             value = clienteDto.value.email,
                             onValueChange = { clienteDto.value.email = it },
@@ -624,47 +620,48 @@ fun cadastrarClientes() {
                             )
                         )
 
-                    OutlinedTextField(
-                        value = clienteDto.value.observacao,
-                        onValueChange = { newText ->
-                            if (newText.length <= 500) {
-                                clienteDto.value.observacao = newText
-                                textLength = newText.length
-                            }
-                        },
-                        label = {
-                            Text(
-                                "Observação",
-                                style = TextStyle(fontSize = fontDefault)
-                            )
-                        },
-                        textStyle = TextStyle(fontSize = fontDefault),
-                        modifier = Modifier
-                            .width(500.dp)
-                            .padding(start = 4.dp)
-                            .height(heightField)
-                            .focusRequester(observacao)
-                            .onKeyEvent { keyEvent ->
-                                if (keyEvent.key == Key.Tab) {
-                                    cadastrar.requestFocus()
-                                    true
-                                } else {
-                                    false
+                        OutlinedTextField(
+                            value = clienteDto.value.observacao,
+                            onValueChange = { newText ->
+                                if (newText.length <= 500) {
+                                    clienteDto.value.observacao = newText
+                                    textLength = newText.length
                                 }
                             },
-                        colors = TextFieldDefaults.outlinedTextFieldColors(
-                            focusedBorderColor = darkBlueColor,
-                            focusedLabelColor = darkBlueColor,
-                            cursorColor = Color.Black,
-                            textColor = Color.Black
+                            label = {
+                                Text(
+                                    "Observação",
+                                    style = TextStyle(fontSize = fontDefault)
+                                )
+                            },
+                            textStyle = TextStyle(fontSize = fontDefault),
+                            modifier = Modifier
+                                .width(500.dp)
+                                .padding(start = 4.dp)
+                                .height(heightField)
+                                .focusRequester(observacao)
+                                .onKeyEvent { keyEvent ->
+                                    if (keyEvent.key == Key.Tab) {
+                                        cadastrar.requestFocus()
+                                        true
+                                    } else {
+                                        false
+                                    }
+                                },
+                            colors = TextFieldDefaults.outlinedTextFieldColors(
+                                focusedBorderColor = darkBlueColor,
+                                focusedLabelColor = darkBlueColor,
+                                cursorColor = Color.Black,
+                                textColor = Color.Black
+                            ),
+                            trailingIcon = {
+                                Text(
+                                    text = "${textLength}/500",
+                                    style = TextStyle(fontSize = fontDefault, color = Color.Gray),
+                                    modifier = Modifier.padding(end = 8.dp)
+                                )
+                            }
                         )
-                    )
-
-                    Text(
-                        text = "${textLength}/500",
-                        style = TextStyle(fontSize = fontDefault, color = Color.Gray),
-                        modifier = Modifier.padding(start = 4.dp, top = 4.dp)
-                    )
                     }
                     setupImageIcon({abrirCadastroImagemView.value = !abrirCadastroImagemView.value})
 
