@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.key
@@ -34,6 +35,7 @@ import gestaoweb.bbf.com.util.Theme.colorIconClient
 import gestaoweb.bbf.com.util.Theme.darkBlueColor
 import gestaoweb.bbf.com.util.Theme.fontDefault
 import gestaoweb.bbf.com.util.Theme.heightField
+import gestaoweb.bbf.com.util.selecionarImage
 import gestaoweb.bbf.com.viewmodel.*
 import gestaoweb.composeapp.generated.resources.*
 import gestaoweb.composeapp.generated.resources.Res
@@ -64,7 +66,8 @@ var showAlert  = MutableStateFlow (false)
 @Composable
 fun cadastrarClientes() {
     var errorMessage by remember { mutableStateOf("") }
-    var cpfDto = ""
+    val cpfDto = ""
+    var textLength by remember { mutableStateOf(clienteDto.value.observacao.length) }
     val focusRequesterNome = remember { FocusRequester() }
     val focusRequesterNomeFantasia = remember { FocusRequester() }
     val cnpj = remember { FocusRequester() }
@@ -85,7 +88,7 @@ fun cadastrarClientes() {
 
     Card(
       modifier = Modifier
-          .padding(start = 200.dp,top = 50.dp,end = 40.dp, bottom = 40.dp)
+          .padding(start = 200.dp,top = 30.dp,end = 40.dp, bottom = 40.dp)
     ) {
         Column(
             modifier = Modifier.background(backgroundCard)
@@ -103,15 +106,11 @@ fun cadastrarClientes() {
             Card(
                 modifier = Modifier
                     .background(backgroundCard)
-                    .padding(start = 50.dp, end = 25.dp, top = 30.dp, bottom = 20.dp),
+                    .padding(start = 50.dp, end = 25.dp, top = 20.dp, bottom = 50.dp),
                 elevation = 4.dp
             ) {
-                Column(
-                    modifier = Modifier
-                        .padding(8.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    Row {
+                Column{
+                    Row{
                         novoCadastroIcon  (onClick = { abrirDadosPessoais.value = !abrirDadosPessoais.value })
                         editarCadastroIcon  (onClick = { abrirFinanceiro.value = !abrirFinanceiro.value })
                         excluirCadastroIcon (onClick = { abrirPedido.value = !abrirPedido.value })
@@ -154,6 +153,7 @@ fun cadastrarClientes() {
                             modifier = Modifier
                                 .height(heightField)
                                 .width(180.dp)
+                                .padding(start = 4.dp)
                                 .focusRequester(cnpj)
                                 .onKeyEvent { keyEvent ->
                                     when {
@@ -188,74 +188,7 @@ fun cadastrarClientes() {
                             }
                         )
 
-                        OutlinedTextField(
-                            value = clienteDto.value.nome,
-                            onValueChange = { clienteDto.value.nome = it },
-                            label = {
-                                Text(
-                                    "Nome Cliente/RazãoSocial${if (clienteDto.value.nome.isEmpty() && errorMessage.isNotEmpty()) " *" else ""}",
-                                    style = TextStyle(
-                                        fontSize = fontDefault
-                                    )
-                                )
-                            },
-
-                            textStyle = TextStyle(fontSize = fontDefault),
-                            modifier = Modifier
-                                .height(heightField)
-                                .padding(start = 8.dp, end = 20.dp)
-                                .width(300.dp)
-                                .focusRequester(focusRequesterNome)
-                                .onKeyEvent { keyEvent ->
-                                    if (keyEvent.key == Key.Tab) {
-                                        focusRequesterNomeFantasia.requestFocus()
-                                        true
-                                    } else {
-                                        false
-                                    }
-                                },
-                            colors = TextFieldDefaults.outlinedTextFieldColors(
-                                focusedBorderColor = darkBlueColor,
-                                focusedLabelColor = darkBlueColor,
-                                cursorColor = Color.Black,
-                                textColor = Color.Black
-                            )
-                        )
-                    }
-
-                    Row {
-                        OutlinedTextField(
-                            value = clienteDto.value.fantasia,
-                            onValueChange = { clienteDto.value.fantasia = it },
-                            label = {
-                                Text(
-                                    "Nome Fantasia",
-                                    style = TextStyle(fontSize = fontDefault)
-                                )
-                            },
-
-                            textStyle = TextStyle(fontSize = fontDefault),
-                            modifier = Modifier
-                                .height(heightField)
-                                .width(300.dp)
-                                .focusRequester(focusRequesterNomeFantasia)
-                                .onKeyEvent { keyEvent ->
-                                    if (keyEvent.key == Key.Tab) {
-                                        rg.requestFocus()
-                                        true
-                                    } else {
-                                        false
-                                    }
-                                },
-                            colors = TextFieldDefaults.outlinedTextFieldColors(
-                                focusedBorderColor = darkBlueColor,
-                                focusedLabelColor = darkBlueColor,
-                                cursorColor = Color.Black,
-                                textColor = Color.Black
-                            )
-                        )
-
-                        OutlinedTextField(
+                        OutlinedTextField (
                             value = clienteDto.value.rg_ie,
                             onValueChange = { clienteDto.value.rg_ie = it },
                             label = {
@@ -266,7 +199,7 @@ fun cadastrarClientes() {
                             },
                             textStyle = TextStyle(fontSize = fontDefault),
                             modifier = Modifier
-                                .padding(start = 8.dp)
+                                .padding(start = 4.dp)
                                 .height(heightField)
                                 .width(200.dp)
                                 .focusRequester(rg)
@@ -285,6 +218,149 @@ fun cadastrarClientes() {
                                 textColor = Color.Black
                             )
                         )
+                        OutlinedTextField (
+                            value = clienteDto.value.vendedor,
+                            onValueChange = { clienteDto.value.vendedor = it },
+                            label = {
+                                Text(
+                                    "Vendedor",
+                                    style = TextStyle(fontSize = fontDefault)
+                                )
+                            },
+                            textStyle = TextStyle(fontSize = fontDefault),
+                            modifier = Modifier
+                                .padding(start = 4.dp)
+                                .height(heightField)
+                                .width(200.dp)
+                                .focusRequester(rg)
+                                .onKeyEvent { keyEvent ->
+                                    if (keyEvent.key == Key.Tab) {
+                                        cep.requestFocus()
+                                        true
+                                    } else {
+                                        false
+                                    }
+                                },
+                            colors = TextFieldDefaults.outlinedTextFieldColors(
+                                focusedBorderColor = darkBlueColor,
+                                focusedLabelColor = darkBlueColor,
+                                cursorColor = Color.Black,
+                                textColor = Color.Black
+                            )
+                        )
+                        OutlinedTextField(
+                            value = telefoneValue.value,
+                            onValueChange = { newValue ->
+                                newValue.text.replace("[^\\d]".toRegex(), "").let { cleaned ->
+                                    formatTelefone(cleaned).let {
+                                        telefoneValue.value = TextFieldValue(
+                                            AnnotatedString(it),
+                                            TextRange(calculateCursorPosition(cleaned.length, it.length, it))
+                                        )
+                                        clienteDto.value.telefone = it
+                                    }
+
+                                }
+
+                            },
+                            label = {
+                                Text(
+                                    "Telefone${if (clienteDto.value.telefone.isEmpty() && errorMessage.isNotEmpty()) " *" else ""}",
+                                    style = TextStyle(
+                                        fontSize = fontDefault
+                                    )
+                                )
+                            },
+
+                            textStyle = TextStyle(fontSize = fontDefault),
+                            modifier = Modifier
+                                .height(heightField)
+                                .padding(start = 4.dp)
+                                .width(160.dp)
+                                .focusRequester(telefone)
+                                .onKeyEvent { keyEvent ->
+                                    if (keyEvent.key == Key.Tab) {
+                                        dataNascimento.requestFocus()
+                                        true
+                                    } else {
+                                        false
+                                    }
+                                },
+                            colors = TextFieldDefaults.outlinedTextFieldColors(
+                                focusedBorderColor = darkBlueColor,
+                                focusedLabelColor = darkBlueColor,
+                                cursorColor = Color.Black,
+                                textColor = Color.Black
+                            )
+                        )
+                    }
+                    Row {
+                        OutlinedTextField(
+                            value = clienteDto.value.fantasia,
+                            onValueChange = { clienteDto.value.fantasia = it },
+                            label = {
+                                Text(
+                                    "Nome Fantasia",
+                                    style = TextStyle(fontSize = fontDefault)
+                                )
+                            },
+
+                            textStyle = TextStyle(fontSize = fontDefault),
+                            modifier = Modifier
+                                .height(heightField)
+                                .padding(start = 4.dp)
+                                .width(350.dp)
+                                .focusRequester(focusRequesterNomeFantasia)
+                                .onKeyEvent { keyEvent ->
+                                    if (keyEvent.key == Key.Tab) {
+                                        rg.requestFocus()
+                                        true
+                                    } else {
+                                        false
+                                    }
+                                },
+                            colors = TextFieldDefaults.outlinedTextFieldColors(
+                                focusedBorderColor = darkBlueColor,
+                                focusedLabelColor = darkBlueColor,
+                                cursorColor = Color.Black,
+                                textColor = Color.Black
+                            )
+                        )
+
+                        OutlinedTextField(
+                            value = clienteDto.value.nome,
+                            onValueChange = { clienteDto.value.nome = it },
+                            label = {
+                                Text(
+                                    "Nome Cliente/RazãoSocial${if (clienteDto.value.nome.isEmpty() && errorMessage.isNotEmpty()) " *" else ""}",
+                                    style = TextStyle(
+                                        fontSize = fontDefault
+                                    )
+                                )
+                            },
+
+                            textStyle = TextStyle(fontSize = fontDefault),
+                            modifier = Modifier
+                                .height(heightField)
+                                .padding(start = 4.dp, end = 4.dp)
+                                .width(395.dp)
+                                .focusRequester(focusRequesterNome)
+                                .onKeyEvent { keyEvent ->
+                                    if (keyEvent.key == Key.Tab) {
+                                        focusRequesterNomeFantasia.requestFocus()
+                                        true
+                                    } else {
+                                        false
+                                    }
+                                },
+                            colors = TextFieldDefaults.outlinedTextFieldColors(
+                                focusedBorderColor = darkBlueColor,
+                                focusedLabelColor = darkBlueColor,
+                                cursorColor = Color.Black,
+                                textColor = Color.Black
+                            )
+                        )
+
                     }
 
                     Row {
@@ -300,6 +376,7 @@ fun cadastrarClientes() {
                             textStyle = TextStyle(fontSize = fontDefault),
                             modifier = Modifier
                                 .width(200.dp)
+                                .padding(start = 4.dp)
                                 .height(heightField)
                                 .focusRequester(cep)
                                 .onKeyEvent { keyEvent ->
@@ -356,7 +433,7 @@ fun cadastrarClientes() {
                             modifier = Modifier
                                 .height(heightField)
                                 .padding(start = 8.dp)
-                                .width(350.dp)
+                                .width(370.dp)
                                 .focusRequester(logradouro)
                                 .onKeyEvent { keyEvent ->
                                     if (keyEvent.key == Key.Tab) {
@@ -386,9 +463,9 @@ fun cadastrarClientes() {
 
                             textStyle = TextStyle(fontSize = fontDefault),
                             modifier = Modifier
-                                .padding(start = 8.dp)
+                                .padding(start = 4.dp, end = 4.dp)
                                 .height(heightField)
-                                .width(100.dp)
+                                .width(170.dp)
                                 .focusRequester(numero)
                                 .onKeyEvent { keyEvent ->
                                     if (keyEvent.key == Key.Tab) {
@@ -405,7 +482,9 @@ fun cadastrarClientes() {
                                 textColor = Color.Black
                             )
                         )
+                    }
 
+                    Row {
                         OutlinedTextField(
                             value = enderecoDto.value.bairro,
                             onValueChange = { enderecoDto.value.bairro = it },
@@ -420,7 +499,7 @@ fun cadastrarClientes() {
 
                             textStyle = TextStyle(fontSize = fontDefault),
                             modifier = Modifier
-                                .padding(start = 8.dp)
+                                .padding(start = 4.dp)
                                 .height(heightField)
                                 .width(250.dp)
                                 .focusRequester(bairro)
@@ -439,9 +518,7 @@ fun cadastrarClientes() {
                                 textColor = Color.Black
                             )
                         )
-                    }
 
-                    Row {
                         OutlinedTextField(
                             value = enderecoDto.value.localidade,
                             onValueChange = { enderecoDto.value.localidade = it },
@@ -457,7 +534,8 @@ fun cadastrarClientes() {
                             textStyle = TextStyle(fontSize = fontDefault),
                             modifier = Modifier
                                 .height(heightField)
-                                .width(250.dp)
+                                .width(350.dp)
+                                .padding(start = 4.dp)
                                 .focusRequester(cidade)
                                 .onKeyEvent { keyEvent ->
                                     if (keyEvent.key == Key.Tab) {
@@ -474,7 +552,6 @@ fun cadastrarClientes() {
                                 textColor = Color.Black
                             )
                         )
-
                         OutlinedTextField(
                             value = enderecoDto.value.estado,
                             onValueChange = { enderecoDto.value.estado = it },
@@ -489,9 +566,9 @@ fun cadastrarClientes() {
 
                             textStyle = TextStyle(fontSize = fontDefault),
                             modifier = Modifier
-                                .padding(start = 8.dp)
+                                .padding(start = 4.dp, end = 4.dp)
                                 .height(heightField)
-                                .width(150.dp)
+                                .width(145.dp)
                                 .focusRequester(estado)
                                 .onKeyEvent { keyEvent ->
                                     if (keyEvent.key == Key.Tab) {
@@ -508,85 +585,10 @@ fun cadastrarClientes() {
                                 textColor = Color.Black
                             )
                         )
-
-                        OutlinedTextField(
-                            value = enderecoDto.value.complemento,
-                            onValueChange = { enderecoDto.value.complemento = it },
-                            label = {
-                                Text(
-                                    "Complemento",
-                                    style = TextStyle(fontSize = fontDefault)
-                                )
-                            },
-
-                            textStyle = TextStyle(fontSize = fontDefault),
-                            modifier = Modifier
-                                .height(heightField)
-                                .width(250.dp)
-                                .padding(start = 8.dp)
-                                .focusRequester(complemento)
-                                .onKeyEvent { keyEvent ->
-                                    if (keyEvent.key == Key.Tab) {
-                                        telefone.requestFocus()
-                                        true
-                                    } else {
-                                        false
-                                    }
-                                },
-                            colors = TextFieldDefaults.outlinedTextFieldColors(
-                                focusedBorderColor = darkBlueColor,
-                                focusedLabelColor = darkBlueColor,
-                                cursorColor = Color.Black,
-                                textColor = Color.Black
-                            )
-                        )
                     }
 
                     Row {
-                        OutlinedTextField(
-                            value = telefoneValue.value,
-                            onValueChange = { newValue ->
-                                newValue.text.replace("[^\\d]".toRegex(), "").let { cleaned ->
-                                    formatTelefone(cleaned).let {
-                                        telefoneValue.value = TextFieldValue(
-                                            AnnotatedString(it),
-                                            TextRange(calculateCursorPosition(cleaned.length, it.length, it))
-                                        )
-                                        clienteDto.value.telefone = it
-                                    }
 
-                                }
-
-                            },
-                            label = {
-                                Text(
-                                    "Telefone${if (clienteDto.value.telefone.isEmpty() && errorMessage.isNotEmpty()) " *" else ""}",
-                                    style = TextStyle(
-                                        fontSize = fontDefault
-                                    )
-                                )
-                            },
-
-                            textStyle = TextStyle(fontSize = fontDefault),
-                            modifier = Modifier
-                                .height(heightField)
-                                .width(150.dp)
-                                .focusRequester(telefone)
-                                .onKeyEvent { keyEvent ->
-                                    if (keyEvent.key == Key.Tab) {
-                                        dataNascimento.requestFocus()
-                                        true
-                                    } else {
-                                        false
-                                    }
-                                },
-                            colors = TextFieldDefaults.outlinedTextFieldColors(
-                                focusedBorderColor = darkBlueColor,
-                                focusedLabelColor = darkBlueColor,
-                                cursorColor = Color.Black,
-                                textColor = Color.Black
-                            )
-                        )
 
                         OutlinedTextField(
                             value = clienteDto.value.email,
@@ -601,7 +603,7 @@ fun cadastrarClientes() {
                             },
                             textStyle = TextStyle(fontSize = fontDefault),
                             modifier = Modifier
-                                .padding(start = 8.dp)
+                                .padding(start = 4.dp)
                                 .height(heightField)
                                 .width(200.dp)
                                 .focusRequester(email)
@@ -621,21 +623,25 @@ fun cadastrarClientes() {
                                 textColor = Color.Black
                             )
                         )
-                    }
 
                     OutlinedTextField(
                         value = clienteDto.value.observacao,
-                        onValueChange = { clienteDto.value.observacao = it },
+                        onValueChange = { newText ->
+                            if (newText.length <= 500) {
+                                clienteDto.value.observacao = newText
+                                textLength = newText.length
+                            }
+                        },
                         label = {
                             Text(
                                 "Observação",
                                 style = TextStyle(fontSize = fontDefault)
                             )
                         },
-
                         textStyle = TextStyle(fontSize = fontDefault),
                         modifier = Modifier
                             .width(500.dp)
+                            .padding(start = 4.dp)
                             .height(heightField)
                             .focusRequester(observacao)
                             .onKeyEvent { keyEvent ->
@@ -654,6 +660,14 @@ fun cadastrarClientes() {
                         )
                     )
 
+                    Text(
+                        text = "${textLength}/500",
+                        style = TextStyle(fontSize = fontDefault, color = Color.Gray),
+                        modifier = Modifier.padding(start = 4.dp, top = 4.dp)
+                    )
+                    }
+                    setupImageIcon({abrirCadastroImagemView.value = !abrirCadastroImagemView.value})
+
                     Row {
                         Button(
                             onClick = {
@@ -669,7 +683,7 @@ fun cadastrarClientes() {
                                 }
                             },
                             modifier = Modifier
-                                .padding(start = 100.dp, top = 10.dp)
+                                .padding(start = 100.dp, top = 30.dp)
                                 .height(35.dp)
                                 .width(250.dp)
                                 .focusRequester(cadastrar),
@@ -690,6 +704,35 @@ fun cadastrarClientes() {
                 }
             }
         }
+    }
+}
+
+@Composable
+fun setupImageIcon(onClick: () -> Unit) {
+    Card(
+        modifier = Modifier
+            .padding(start = 4.dp, top = 10.dp, bottom = 10.dp)
+            .height(300.dp)
+            .width(200.dp)
+    ) {
+        IconButton(
+            modifier = Modifier.background(backgroundCard),
+            onClick = onClick
+        ) {
+            Icon(
+                painterResource(Res.drawable.ic_image),
+                tint = darkBlueColor,
+                contentDescription = "Cadastrar Imagem"
+            )
+        }
+    }
+}
+
+@Composable
+fun setupImagem() {
+    if(abrirCadastroImagemView.collectAsState().value) {
+        selecionarImage()
+        abrirCadastroImagemView.value = false
     }
 }
 
@@ -807,7 +850,7 @@ fun dadosPessoaisIcon(onClick: () -> Unit){
             text = "D.PESSOAIS",
             color = Color.Black,
             modifier = Modifier.padding(
-                top = 16.dp
+                top = 20.dp
             ),
             style = TextStyle(fontSize = fontDefault)
         )
@@ -831,7 +874,7 @@ fun novoCadastroIcon(onClick: () -> Unit){
             text = "NOVO",
             color = Color.Black,
             modifier = Modifier.padding(
-                top = 16.dp
+                top = 20.dp
             ),
             style = TextStyle(fontSize = fontDefault)
         )
@@ -855,7 +898,7 @@ fun editarCadastroIcon(onClick: () -> Unit){
             text = "EDITAR",
             color = Color.Black,
             modifier = Modifier.padding(
-                top = 16.dp
+                top = 20.dp
             ),
             style = TextStyle(fontSize = fontDefault)
         )
@@ -879,7 +922,7 @@ fun excluirCadastroIcon(onClick: () -> Unit){
             text = "EXCLUIR",
             color = Color.Black,
             modifier = Modifier.padding(
-                top = 16.dp
+                top = 20.dp
             ),
             style = TextStyle(fontSize = fontDefault)
         )
@@ -901,7 +944,7 @@ fun financeiroIcon(onClick: () -> Unit) {
             text = "FINANCEIRO",
             color = Color.Black,
             modifier = Modifier.padding(
-                top = 16.dp
+                top = 20.dp
             ),
             style = TextStyle(fontSize = fontDefault)
         )
@@ -923,7 +966,7 @@ fun pedidoIcon(onClick: () -> Unit) {
             text = "PEDIDO",
             color = Color.Black,
             modifier = Modifier.padding(
-                top = 16.dp
+                top = 20.dp
             ),
             style = TextStyle(fontSize = fontDefault)
         )
