@@ -17,8 +17,12 @@ import androidx.compose.ui.unit.sp
 import gestaoweb.bbf.com.util.Menu.iconsMenu
 import gestaoweb.bbf.com.util.Menu.menuListNames
 import gestaoweb.bbf.com.util.Theme
+import gestaoweb.bbf.com.util.Theme.colorIconClient
 import gestaoweb.bbf.com.view.clientes.cadastrarClientes
+import gestaoweb.composeapp.generated.resources.Res
+import gestaoweb.composeapp.generated.resources.logo
 import kotlinx.coroutines.flow.MutableStateFlow
+import org.jetbrains.compose.resources.painterResource
 
 val itemMenuSelected = MutableStateFlow(0)
 
@@ -42,17 +46,29 @@ val itemMenuSelected = MutableStateFlow(0)
  fun navigationRail() {
     val itemSelected by itemMenuSelected.collectAsState()
 
+    Icon(
+        painter = painterResource(Res.drawable.logo),
+        contentDescription = "Ícone do Menu",
+        modifier = Modifier
+            .size(150.dp)
+
+            .padding(start = 25.dp, bottom =5.dp),
+        tint = colorIconClient
+    )
+
     NavigationRail(
-        modifier = Modifier.width(180.dp),
-        elevation = 3.dp,
+        modifier = Modifier
+            .padding(top = 140.dp)
+            .width(180.dp),
         backgroundColor = Theme.transparentColor,
+        elevation = 2.dp
     ) {
         menuListNames.forEachIndexed { index, item ->
             val isSelected = itemSelected == index
 
             val isHovered by remember { mutableStateOf(false) }
             val size by animateDpAsState(targetValue = when {
-                isHovered -> 45.dp
+                isHovered -> 65.dp
                 isSelected -> 28.dp
                 else -> 24.dp
             })
@@ -63,8 +79,7 @@ val itemMenuSelected = MutableStateFlow(0)
                         iconsMenu()[index],
                         contentDescription = null,
                         modifier = Modifier.size(size),
-                        tint = Color.White
-
+                        tint = if (isSelected) Color(0xFFFC7900) else Color.White
                     )
                 },
                 label = {
@@ -72,7 +87,7 @@ val itemMenuSelected = MutableStateFlow(0)
                         item,
                         modifier = Modifier.padding(vertical = 12.dp),
                         style = TextStyle(
-                            color = Color.White,
+                            color = if (isSelected) Color(0xFFFC7900) else Color.White,
                             fontSize = 10.sp
                         )
                     )

@@ -6,9 +6,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.material.DrawerDefaults.backgroundColor
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ExitToApp
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,6 +21,7 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import gestaoweb.bbf.com.util.Theme.darkBlueColor
+import gestaoweb.bbf.com.util.Theme.fontDefault
 import gestaoweb.bbf.com.util.Theme.gradientBackground
 import gestaoweb.bbf.com.viewmodel.falhaAutenticacao
 import gestaoweb.bbf.com.viewmodel.usuarioLogado
@@ -234,22 +232,25 @@ fun showUpLoginError() {
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
-        Text(
-            modifier = Modifier
-                .padding(end = 40.dp, top = 15.dp)
-                .align(Alignment.TopEnd),
-            text = "Usuário Logado: ${usuarioLogado.collectAsState().value.nome}",
-            color = Color.Black,
-            style = TextStyle(fontSize = 15.sp)
-        )
-
         IconButton(
             onClick = {
                 window.location.reload()
             },
             modifier = Modifier.align(Alignment.TopEnd)
         ) {
-            Icon(Icons.Default.ExitToApp, contentDescription = "Log Out")
+            Icon(
+                painterResource(Res.drawable.ic_user),
+                contentDescription = "Sair",
+                tint = Color.White
+            )
         }
+        Text(
+            modifier = Modifier
+                .padding(end = 40.dp, top = 15.dp)
+                .align(Alignment.TopEnd),
+            text = usuarioLogado.collectAsState().value.nome,
+            color = Color.White,
+            style = TextStyle(fontSize = fontDefault)
+        )
     }
 }
