@@ -12,6 +12,7 @@ import androidx.compose.material.DrawerDefaults.backgroundColor
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -97,7 +98,6 @@ fun cadastrarClientes() {
             Row (
                 modifier = Modifier
                     .width(400.dp)
-                    .border(1.dp, Color.Gray, RoundedCornerShape(topEnd = 4.dp, bottomEnd = 50.dp))
                     .background(backgroundCard, RoundedCornerShape(topEnd = 8.dp, bottomEnd = 50.dp))
             ){
                 dadosPessoaisIcon(onClick = { abrirDadosPessoais.value = !abrirDadosPessoais.value })
@@ -663,28 +663,19 @@ fun cadastrarClientes() {
                             }
                         )
                     }
-                    setupImageIcon({abrirCadastroImagemView.value = !abrirCadastroImagemView.value})
-
                     Row {
+                        setupImageIcon({abrirCadastroImagemView.value = !abrirCadastroImagemView.value})
                         Button(
                             onClick = {
-                                errorMessage = ""
-                                if (clienteDto.value.cnpj_cpf.isEmpty()) {
-                                    clienteDto.value.cnpj_cpf = cpfDto
-                                }
-
-                                if (validarCampos(clienteDto.value, enderecoDto.value)) {
-                                    bindCadastroCliente()
-                                } else {
-                                    errorMessage = "Por favor, preencha todos os campos obrigatórios(*)."
-                                }
+                                bindCadastroCliente()
                             },
                             modifier = Modifier
-                                .padding(start = 100.dp, top = 30.dp)
+                                .padding(start = 380.dp,bottom = 10.dp)
+                                .align(Alignment.Bottom)
                                 .height(35.dp)
-                                .width(250.dp)
+                                .width(150.dp)
                                 .focusRequester(cadastrar),
-                            colors = ButtonDefaults.buttonColors(backgroundColor = backgroundColor)
+                            colors = ButtonDefaults.buttonColors(backgroundColor = darkBlueColor)
                         ) {
                             Text(text = "Cadastrar", color = Color.White)
                         }
