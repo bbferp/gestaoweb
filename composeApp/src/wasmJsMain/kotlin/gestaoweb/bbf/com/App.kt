@@ -11,15 +11,12 @@ import gestaoweb.bbf.com.viewmodel.usuarioValidado
 @Composable
 fun App() {
     Theme.MyAppTheme {
-   /*     if (usuarioValidado.collectAsState().value) {
+        if (usuarioValidado.collectAsState().value) {
             setupNavigation()
             navigationRail()
             fieldLogOut()
         } else {
             loginScreen()
-        }*/
-        setupNavigation()
-        navigationRail()
-        fieldLogOut()
+        }
     }
 }
