@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
-import androidx.compose.material.DrawerDefaults.backgroundColor
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
@@ -17,7 +16,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.key
@@ -32,6 +30,7 @@ import androidx.compose.ui.unit.sp
 import gestaoweb.bbf.com.model.ClienteDto
 import gestaoweb.bbf.com.model.EnderecoDto
 import gestaoweb.bbf.com.util.Theme.backgroundCard
+import gestaoweb.bbf.com.util.Theme.borderColor
 import gestaoweb.bbf.com.util.Theme.colorIconClient
 import gestaoweb.bbf.com.util.Theme.darkBlueColor
 import gestaoweb.bbf.com.util.Theme.fontDefault
@@ -45,7 +44,6 @@ import gestaoweb.composeapp.generated.resources.ic_financeiro
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.bff.erp.util.Format.formatCnpj
 import org.bff.erp.util.Format.formatCpf
-import org.bff.erp.util.Format.formatDataNascimento
 import org.bff.erp.util.Format.formatTelefone
 import org.jetbrains.compose.resources.painterResource
 
@@ -66,8 +64,7 @@ var showAlert  = MutableStateFlow (false)
 
 @Composable
 fun cadastrarClientes() {
-    var errorMessage by remember { mutableStateOf("") }
-    val cpfDto = ""
+    val errorMessage by remember { mutableStateOf("") }
     var textLength by remember { mutableStateOf(clienteDto.value.observacao.length) }
     val focusRequesterNome = remember { FocusRequester() }
     val focusRequesterNomeFantasia = remember { FocusRequester() }
@@ -77,12 +74,10 @@ fun cadastrarClientes() {
     val cidade = remember { FocusRequester() }
     val bairro = remember { FocusRequester() }
     val numero = remember { FocusRequester() }
-    val complemento = remember { FocusRequester() }
     val estado = remember { FocusRequester() }
     val cep = remember { FocusRequester() }
     val vendedor = remember { FocusRequester() }
     val email = remember { FocusRequester() }
-    val dataNascimento = remember { FocusRequester() }
     val rg = remember { FocusRequester() }
     val telefone = remember { FocusRequester() }
     val observacao = remember { FocusRequester() }
@@ -101,23 +96,38 @@ fun cadastrarClientes() {
                     .background(backgroundCard, RoundedCornerShape(topEnd = 8.dp, bottomEnd = 50.dp))
             ){
                 dadosPessoaisIcon(onClick = { abrirDadosPessoais.value = !abrirDadosPessoais.value })
-                financeiroIcon(onClick = { abrirFinanceiro.value = !abrirFinanceiro.value })
                 pedidoIcon(onClick = { abrirPedido.value = !abrirPedido.value })
+                financeiroIcon(onClick = { abrirFinanceiro.value = !abrirFinanceiro.value })
             }
             Card(
                 modifier = Modifier
                     .background(backgroundCard)
-                    .padding(start = 50.dp, end = 25.dp, top = 20.dp, bottom = 50.dp),
-                elevation = 4.dp
+                    .padding(start = 50.dp, end = 25.dp, bottom = 50.dp)
+                    .border(
+                        1.dp,
+                        borderColor,
+                        shape = RoundedCornerShape(8.dp)
+                    ),
             ) {
-                Column{
+                Column(
+                    modifier = Modifier
+                        .border(
+                            1.dp,
+                            borderColor,
+                            shape = RoundedCornerShape(8.dp)
+                        )
+                ){
                     Row{
                         novoCadastroIcon  (onClick = { abrirDadosPessoais.value = !abrirDadosPessoais.value })
                         editarCadastroIcon  (onClick = { abrirFinanceiro.value = !abrirFinanceiro.value })
                         excluirCadastroIcon (onClick = { abrirPedido.value = !abrirPedido.value })
                     }
 
-                    Row {
+                    labelScreen()
+
+                    Row( modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                    ){
                         OutlinedTextField(
                             value = cnpjValue.value,
                             onValueChange = { newValue ->
@@ -157,12 +167,12 @@ fun cadastrarClientes() {
                                 .padding(start = 4.dp)
                                 .focusRequester(cnpj)
                                 .onKeyEvent { keyEvent ->
-                                    when {
-                                        keyEvent.key == Key.Enter -> {
+                                    when (keyEvent.key) {
+                                        Key.Enter -> {
                                             validarCpfCnpj(clienteDto.value.cnpj_cpf)
                                             true
                                         }
-                                        keyEvent.key == Key.Tab -> {
+                                        Key.Tab -> {
                                             rg.requestFocus()
                                             true
                                         }
@@ -293,7 +303,10 @@ fun cadastrarClientes() {
                             )
                         )
                     }
-                    Row {
+                    Row(
+                        modifier = Modifier
+                            .align(Alignment.CenterHorizontally)
+                    ) {
                         OutlinedTextField(
                             value = clienteDto.value.fantasia,
                             onValueChange = { clienteDto.value.fantasia = it },
@@ -361,7 +374,9 @@ fun cadastrarClientes() {
                         )
                     }
 
-                    Row {
+                    Row(modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                    ) {
                         OutlinedTextField(
                             value = enderecoDto.value.cep,
                             onValueChange = { enderecoDto.value.cep = it },
@@ -448,7 +463,6 @@ fun cadastrarClientes() {
                                 textColor = Color.Black
                             )
                         )
-
                         OutlinedTextField(
                             value = enderecoDto.value.numero,
                             onValueChange = { enderecoDto.value.numero = it },
@@ -482,7 +496,9 @@ fun cadastrarClientes() {
                         )
                     }
 
-                    Row {
+                    Row(modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                    ) {
                         OutlinedTextField(
                             value = enderecoDto.value.bairro,
                             onValueChange = { enderecoDto.value.bairro = it },
@@ -585,7 +601,9 @@ fun cadastrarClientes() {
                         )
                     }
 
-                    Row {
+                    Row(modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                    ) {
                         OutlinedTextField(
                             value = clienteDto.value.email,
                             onValueChange = { clienteDto.value.email = it },
@@ -663,7 +681,9 @@ fun cadastrarClientes() {
                             }
                         )
                     }
-                    Row {
+                    Row(modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                    ) {
                         setupImageIcon({abrirCadastroImagemView.value = !abrirCadastroImagemView.value})
                         Button(
                             onClick = {
@@ -696,11 +716,29 @@ fun cadastrarClientes() {
 }
 
 @Composable
+fun labelScreen() {
+    Box(
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Card(
+            modifier = Modifier
+                .align(Alignment.Center),
+            elevation = 0.dp
+        ) {
+            Text(
+                text = "Dados Pessoais",
+                color = borderColor
+            )
+        }
+    }
+}
+
+@Composable
 fun setupImageIcon(onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .padding(start = 4.dp, top = 10.dp, bottom = 10.dp)
-            .height(300.dp)
+            .height(400.dp)
             .width(200.dp)
     ) {
         IconButton(
