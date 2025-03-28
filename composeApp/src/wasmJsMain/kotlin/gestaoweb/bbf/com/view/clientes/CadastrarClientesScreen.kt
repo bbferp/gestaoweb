@@ -102,6 +102,7 @@ fun cadastrarClientes() {
             Card(
                 modifier = Modifier
                     .background(backgroundCard)
+                    .width(950.dp)
                     .padding(start = 50.dp, end = 25.dp, bottom = 50.dp)
                     .border(
                         1.dp,
@@ -163,8 +164,6 @@ fun cadastrarClientes() {
                             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
                             modifier = Modifier
                                 .height(heightField)
-                                .width(180.dp)
-                                .padding(start = 4.dp)
                                 .focusRequester(cnpj)
                                 .onKeyEvent { keyEvent ->
                                     when (keyEvent.key) {
@@ -210,7 +209,6 @@ fun cadastrarClientes() {
                             modifier = Modifier
                                 .padding(start = 4.dp)
                                 .height(heightField)
-                                .width(200.dp)
                                 .focusRequester(rg)
                                 .onKeyEvent { keyEvent ->
                                     if (keyEvent.key == Key.Tab) {
@@ -240,7 +238,6 @@ fun cadastrarClientes() {
                             modifier = Modifier
                                 .padding(start = 4.dp)
                                 .height(heightField)
-                                .width(200.dp)
                                 .focusRequester(vendedor)
                                 .onKeyEvent { keyEvent ->
                                     if (keyEvent.key == Key.Tab) {
@@ -257,6 +254,12 @@ fun cadastrarClientes() {
                                 textColor = Color.Black
                             )
                         )
+
+                    }
+                    Row(
+                        modifier = Modifier
+                            .align(Alignment.CenterHorizontally)
+                    ) {
                         OutlinedTextField(
                             value = telefoneValue.value,
                             onValueChange = { newValue ->
@@ -284,8 +287,7 @@ fun cadastrarClientes() {
                             textStyle = TextStyle(fontSize = fontDefault),
                             modifier = Modifier
                                 .height(heightField)
-                                .padding(start = 4.dp)
-                                .width(160.dp)
+                                .padding(start = 4.dp, end = 4.dp)
                                 .focusRequester(telefone)
                                 .onKeyEvent { keyEvent ->
                                     if (keyEvent.key == Key.Tab) {
@@ -302,11 +304,7 @@ fun cadastrarClientes() {
                                 textColor = Color.Black
                             )
                         )
-                    }
-                    Row(
-                        modifier = Modifier
-                            .align(Alignment.CenterHorizontally)
-                    ) {
+
                         OutlinedTextField(
                             value = clienteDto.value.fantasia,
                             onValueChange = { clienteDto.value.fantasia = it },
@@ -321,7 +319,6 @@ fun cadastrarClientes() {
                             modifier = Modifier
                                 .height(heightField)
                                 .padding(start = 4.dp)
-                                .width(350.dp)
                                 .focusRequester(focusRequesterNomeFantasia)
                                 .onKeyEvent { keyEvent ->
                                     if (keyEvent.key == Key.Tab) {
@@ -355,7 +352,6 @@ fun cadastrarClientes() {
                             modifier = Modifier
                                 .height(heightField)
                                 .padding(start = 4.dp, end = 4.dp)
-                                .width(395.dp)
                                 .focusRequester(focusRequesterNome)
                                 .onKeyEvent { keyEvent ->
                                     if (keyEvent.key == Key.Tab) {
@@ -388,7 +384,6 @@ fun cadastrarClientes() {
                             },
                             textStyle = TextStyle(fontSize = fontDefault),
                             modifier = Modifier
-                                .width(200.dp)
                                 .padding(start = 4.dp)
                                 .height(heightField)
                                 .focusRequester(cep)
@@ -446,7 +441,6 @@ fun cadastrarClientes() {
                             modifier = Modifier
                                 .height(heightField)
                                 .padding(start = 8.dp)
-                                .width(370.dp)
                                 .focusRequester(logradouro)
                                 .onKeyEvent { keyEvent ->
                                     if (keyEvent.key == Key.Tab) {
@@ -477,7 +471,6 @@ fun cadastrarClientes() {
                             modifier = Modifier
                                 .padding(start = 4.dp, end = 4.dp)
                                 .height(heightField)
-                                .width(170.dp)
                                 .focusRequester(numero)
                                 .onKeyEvent { keyEvent ->
                                     if (keyEvent.key == Key.Tab) {
@@ -515,7 +508,6 @@ fun cadastrarClientes() {
                             modifier = Modifier
                                 .padding(start = 4.dp)
                                 .height(heightField)
-                                .width(250.dp)
                                 .focusRequester(bairro)
                                 .onKeyEvent { keyEvent ->
                                     if (keyEvent.key == Key.Tab) {
@@ -548,7 +540,6 @@ fun cadastrarClientes() {
                             textStyle = TextStyle(fontSize = fontDefault),
                             modifier = Modifier
                                 .height(heightField)
-                                .width(350.dp)
                                 .padding(start = 4.dp)
                                 .focusRequester(cidade)
                                 .onKeyEvent { keyEvent ->
@@ -582,7 +573,6 @@ fun cadastrarClientes() {
                             modifier = Modifier
                                 .padding(start = 4.dp, end = 4.dp)
                                 .height(heightField)
-                                .width(145.dp)
                                 .focusRequester(estado)
                                 .onKeyEvent { keyEvent ->
                                     if (keyEvent.key == Key.Tab) {
@@ -619,7 +609,6 @@ fun cadastrarClientes() {
                             modifier = Modifier
                                 .padding(start = 4.dp)
                                 .height(heightField)
-                                .width(200.dp)
                                 .focusRequester(email)
                                 .onKeyEvent { keyEvent ->
                                     if (keyEvent.key == Key.Tab) {
@@ -654,7 +643,6 @@ fun cadastrarClientes() {
                             },
                             textStyle = TextStyle(fontSize = fontDefault),
                             modifier = Modifier
-                                .width(500.dp)
                                 .padding(start = 4.dp)
                                 .height(heightField)
                                 .focusRequester(observacao)

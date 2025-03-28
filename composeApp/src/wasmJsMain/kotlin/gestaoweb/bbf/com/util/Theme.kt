@@ -22,7 +22,7 @@ object Theme {
     val  darkBlueColor = Color(0xbb0a1f44)
     val  borderColor = Color(0x995d6987)
     val heightField = 55.dp
-    val fontDefault = 10.sp
+    val fontDefault = 12.sp
     val gradientBackground = Brush.verticalGradient(
         colors = listOf(
             Color(0xFF597395),
