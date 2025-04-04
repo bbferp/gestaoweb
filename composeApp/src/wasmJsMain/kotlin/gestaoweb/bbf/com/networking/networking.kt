@@ -48,7 +48,6 @@ suspend fun getCep(cep: String): Endereco {
         CoroutineScope(Dispatchers.Main).launch {
 
             imagemSelecionada.value?.let {
-                setImageCliente(it,cliente)
                 cliente.clienteTemImagem = true
             }
 

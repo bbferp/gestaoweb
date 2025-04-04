@@ -27,7 +27,6 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.unit.times
 import gestaoweb.bbf.com.model.ClienteDto
 import gestaoweb.bbf.com.model.EnderecoDto
 import gestaoweb.bbf.com.util.Theme.backgroundCard
@@ -36,17 +35,20 @@ import gestaoweb.bbf.com.util.Theme.colorIconClient
 import gestaoweb.bbf.com.util.Theme.darkBlueColor
 import gestaoweb.bbf.com.util.Theme.fontDefault
 import gestaoweb.bbf.com.util.Theme.heightField
+import gestaoweb.bbf.com.util.imagemSelecionada
 import gestaoweb.bbf.com.util.selecionarImage
 import gestaoweb.bbf.com.viewmodel.*
 import gestaoweb.composeapp.generated.resources.*
 import gestaoweb.composeapp.generated.resources.Res
 import gestaoweb.composeapp.generated.resources.ic_dpessoais
 import gestaoweb.composeapp.generated.resources.ic_financeiro
+import kotlinx.browser.window
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.bff.erp.util.Format.formatCnpj
 import org.bff.erp.util.Format.formatCpf
 import org.bff.erp.util.Format.formatTelefone
 import org.jetbrains.compose.resources.painterResource
+import org.w3c.dom.url.URL.Companion.createObjectURL
 
 var limparCampos = MutableStateFlow(false)
 var abrirControleCreditoView = MutableStateFlow(false)
@@ -66,6 +68,7 @@ var showAlert  = MutableStateFlow (false)
 
 @Composable
 fun cadastrarClientes() {
+    setupImagem()
     val errorMessage by remember { mutableStateOf("") }
     var textLength by remember { mutableStateOf(clienteDto.value.observacao.length) }
     val focusRequesterNome = remember { FocusRequester() }
@@ -147,25 +150,16 @@ fun cadastrarClientes() {
                             textStyle = TextStyle(fontSize = fontDefault),
                             keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
                             modifier = Modifier
-                                .height(heightField)
-                                .focusRequester(idCliente)
-                                .onKeyEvent { keyEvent ->
-                                    when (keyEvent.key) {
-                                        Key.Tab -> {
-                                            rg.requestFocus()
-                                            true
-                                        }
-                                        else -> false
-                                    }
-
-                                },
+                                .height(heightField),
                             colors = TextFieldDefaults.outlinedTextFieldColors(
                                 focusedBorderColor = darkBlueColor,
                                 focusedLabelColor = darkBlueColor,
                                 cursorColor = Color.Black,
                                 textColor = Color.Black
                             ),
+                            enabled = false
                         )
+
                         OutlinedTextField(
                             value = cnpjValue.value,
                             onValueChange = { newValue ->
@@ -250,7 +244,7 @@ fun cadastrarClientes() {
                                 .focusRequester(rg)
                                 .onKeyEvent { keyEvent ->
                                     if (keyEvent.key == Key.Tab) {
-                                        vendedor.requestFocus()
+                                        telefone.requestFocus()
                                         true
                                     } else {
                                         false
@@ -397,7 +391,7 @@ fun cadastrarClientes() {
                                 .focusRequester(cep)
                                 .onKeyEvent { keyEvent ->
                                     if (keyEvent.key == Key.Enter) {
-                                        if (enderecoDto.value.cep.isNotEmpty()) {
+                                         if (enderecoDto.value.cep.isNotEmpty()) {
                                             fetchCep(enderecoDto.value.cep)
                                         }
                                         true
@@ -620,7 +614,7 @@ fun cadastrarClientes() {
                                 .focusRequester(email)
                                 .onKeyEvent { keyEvent ->
                                     if (keyEvent.key == Key.Tab) {
-                                        observacao.requestFocus()
+                                        vendedor.requestFocus()
                                         true
                                     } else {
                                         false
@@ -651,7 +645,7 @@ fun cadastrarClientes() {
                                 .focusRequester(vendedor)
                                 .onKeyEvent { keyEvent ->
                                     if (keyEvent.key == Key.Tab) {
-                                        telefone.requestFocus()
+                                        observacao.requestFocus()
                                         true
                                     } else {
                                         false
@@ -762,21 +756,35 @@ fun labelScreen() {
 
 @Composable
 fun setupImageIcon(onClick: () -> Unit) {
-    Card(
+    val img = imagemSelecionada.collectAsState().value
+
+    Box(
         modifier = Modifier
-            .padding(start = 4.dp, top = 10.dp, bottom = 20.dp)
-            .height(400.dp)
-            .width(200.dp)
+            .fillMaxSize()
+            .padding(16.dp)
     ) {
-        IconButton(
-            modifier = Modifier.background(backgroundCard),
-            onClick = onClick
+        Card(
+            modifier = Modifier
+                .padding(start = 4.dp, top = 10.dp, bottom = 20.dp)
+                .height(400.dp)
+                .width(200.dp)
         ) {
-            Icon(
-                painterResource(Res.drawable.ic_image),
-                tint = darkBlueColor,
-                contentDescription = "Cadastrar Imagem"
-            )
+            if (img != null) {
+                window.open(url = createObjectURL(img))
+
+
+            } else {
+                IconButton(
+                    modifier = Modifier.background(backgroundCard),
+                    onClick = onClick
+                ) {
+                    Icon(
+                        painter = painterResource(Res.drawable.ic_image),
+                        tint = darkBlueColor,
+                        contentDescription = "Cadastrar Imagem"
+                    )
+                }
+            }
         }
     }
 }
@@ -818,73 +826,6 @@ private fun validarCampos(cliente: ClienteDto, end: EnderecoDto): Boolean {
             end.cep.isNotEmpty()
 }
 
-@Composable
-fun iconImagem(onClick: () -> Unit) {
-    Row(modifier = Modifier
-        .padding(8.dp)) {
-        IconButton(onClick = onClick) {
-            Icon(
-                tint = Color.Black,
-                imageVector = Icons.Default.Menu,
-                contentDescription = "Cadastrar imagem"
-            )
-        }
-
-        Text(
-            text = "Selecionar Imagem",
-            color = Color.Black,
-            modifier = Modifier.padding(
-                start = 8.dp, top = 16.dp
-            ),
-            style = TextStyle(fontSize = 12.sp)
-        )
-    }
-}
-
-@Composable
-fun iconCadastroAroma(onClick: () -> Unit) {
-    Row(modifier = Modifier
-        .padding(8.dp)) {
-        IconButton(onClick = onClick) {
-            Icon(
-                tint = Color.Black,
-                imageVector = Icons.Default.Menu,
-                contentDescription = "Cadastrar Produtos"
-            )
-        }
-
-        Text(
-            text = "Cadastrar Produtos",
-            color = Color.Black,
-            modifier = Modifier.padding(
-                start = 8.dp, top = 16.dp
-            ),
-            style = TextStyle(fontSize = 12.sp)
-        )
-    }
-}
-
-@Composable
-private fun iconControleCredito(onClick: () -> Unit) {
-    Row(modifier = Modifier.padding(8.dp)) {
-        IconButton(onClick = onClick) {
-            Icon(
-                tint = Color.Black,
-                imageVector = Icons.Default.Lock,
-                contentDescription = "Controle de Crédito"
-            )
-        }
-
-        Text(
-            text = "Controle de Crédito",
-            color = Color.Black,
-            modifier = Modifier.padding(
-                top = 16.dp
-            ),
-            style = TextStyle(fontSize = 12.sp)
-        )
-    }
-}
 
 @Composable
 fun dadosPessoaisIcon(onClick: () -> Unit){
