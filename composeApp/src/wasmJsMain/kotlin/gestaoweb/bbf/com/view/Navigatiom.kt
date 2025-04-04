@@ -18,7 +18,7 @@ import gestaoweb.bbf.com.util.Menu.iconsMenu
 import gestaoweb.bbf.com.util.Menu.menuListNames
 import gestaoweb.bbf.com.util.Theme
 import gestaoweb.bbf.com.util.Theme.colorIconClient
-import gestaoweb.bbf.com.view.clientes.cadastrarClientes
+import gestaoweb.bbf.com.view.clientes.clientesScreen
 import gestaoweb.composeapp.generated.resources.Res
 import gestaoweb.composeapp.generated.resources.logo
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,7 +31,7 @@ val itemMenuSelected = MutableStateFlow(0)
     itemMenuSelected.collectAsState().value.let {
         when (it) {
             0 -> dashBoardScreen()
-            1 -> cadastrarClientes()
+            1 -> clientesScreen()
             2 -> "Colaborador"
             3 -> "Produtos"
             4 -> "Estoque"
