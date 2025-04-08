@@ -70,15 +70,15 @@ fun cadastrarClientes() {
                 )
         ) {
             Row {
-                novoCadastroIcon(onClick = { abrirCadastro.value = !abrirCadastro.value })
-                editarCadastroIcon(onClick = { abrirEditar.value = !abrirEditar.value })
-                excluirCadastroIcon(onClick = { abrirExcluir.value = !abrirExcluir.value })
+                dadosPessoaisIcon(onClick = { abrirDadosPessoais.value = true })
+                pedidoIcon(onClick = { abrirPedido.value = true })
+                financeiroIcon(onClick = { abrirFinanceiro.value = true })
             }
-            abrirCadastro.value = true
-            labelScreen()
-            navigateToCadastrarCliente()
-            navigateToEditarCliente()
 
+            abrirDadosPessoais.value = true
+            labelScreen()
+            navigateToDadosPessoais()
+            navigateToPedido()
         }
     }
 }
@@ -124,8 +124,8 @@ fun cadastroScreen() {
                 },
                 textStyle = TextStyle(fontSize = fontDefault),
                 keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Number),
-                modifier = Modifier
-                    .height(heightField),
+                modifier = Modifier.height(heightField),
+
                 colors = TextFieldDefaults.outlinedTextFieldColors(
                     focusedBorderColor = darkBlueColor,
                     focusedLabelColor = darkBlueColor,
@@ -250,9 +250,7 @@ fun cadastroScreen() {
                             )
                             clienteDto.value.telefone = it
                         }
-
                     }
-
                 },
                 label = {
                     Text(

@@ -81,15 +81,14 @@ fun clientesScreen() {
                     .width(400.dp)
                     .background(backgroundCard, RoundedCornerShape(topEnd = 8.dp, bottomEnd = 50.dp))
             ){
-                dadosPessoaisIcon(onClick = { abrirDadosPessoais.value = !abrirDadosPessoais.value })
-                pedidoIcon(onClick = { abrirPedido.value = !abrirPedido.value })
-                financeiroIcon(onClick = { abrirFinanceiro.value = !abrirFinanceiro.value })
+                novoCadastroIcon(onClick = { abrirCadastro.value = true })
+                editarCadastroIcon(onClick = { abrirEditar.value = true })
+                excluirCadastroIcon(onClick = { abrirExcluir.value = !abrirExcluir.value })
             }
             cadastrarClientes()
         }
     }
 }
-
 
 @Composable
 fun labelScreen() {
@@ -102,13 +101,12 @@ fun labelScreen() {
             elevation = 0.dp
         ) {
             Text(
-                text = "Dados Pessoais",
+                text = labelTitle.collectAsState().value,
                 color = borderColor
             )
         }
     }
 }
-
 
 @Composable
 fun setupImagem() {
