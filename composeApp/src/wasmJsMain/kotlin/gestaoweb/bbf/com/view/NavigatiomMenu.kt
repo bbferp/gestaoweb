@@ -1,6 +1,10 @@
 package gestaoweb.bbf.com.view
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -25,13 +29,14 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import org.jetbrains.compose.resources.painterResource
 
 val itemMenuSelected = MutableStateFlow(0)
+var clientScreen  = MutableStateFlow (false)
 
 @Composable
  fun setupNavigation() {
     itemMenuSelected.collectAsState().value.let {
         when (it) {
             0 -> dashBoardScreen()
-            1 -> clientesScreen()
+            1 -> clientScreen.value = !clientScreen.value
             2 -> "Colaborador"
             3 -> "Produtos"
             4 -> "Estoque"
@@ -41,6 +46,8 @@ val itemMenuSelected = MutableStateFlow(0)
         }
     }
 }
+
+
 
 @Composable
  fun navigationRail() {
@@ -94,7 +101,12 @@ val itemMenuSelected = MutableStateFlow(0)
                 },
                 selected = isSelected,
                 onClick = {
-                    itemMenuSelected.value = index
+                    if (index == itemMenuSelected.value ){
+                        clientScreen.value = false
+                        itemMenuSelected.value = 0
+                    } else {
+                        itemMenuSelected.value = index
+                    }
                 },
             )
         }
